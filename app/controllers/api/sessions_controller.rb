@@ -8,6 +8,7 @@ class Api::SessionsController < ApplicationController
             exp = Time.now.to_i + 4 * 60
             token = TokenProvider.call(user_id: user.id, exp: exp)
             puts "メアドとパスワードは合っている"
+            puts token
             render json: { access: token }, status: :ok
         else
             puts "メアドとパスワードが違う"
