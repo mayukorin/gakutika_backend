@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: bundle exec rails s -p 3001 -b '0.0.0.0'
+    ports:
+      - '3001:3001'
+    depends_on:
+      - db
+    volumes:
+      - .:/gakutika_backend
+      - bundle:/usr/local/bundle
+    tty: true
+    stdin_open: true
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - '3306:3306'
+volumes:
+  bundle:
