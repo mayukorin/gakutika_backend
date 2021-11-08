@@ -11,8 +11,9 @@ class UserAuthenticator
             puts "llllllll"
             puts payload['user_id']
             user = User.find(payload['user_id'])
-        rescue StandardError
+        rescue StandardError => e
             puts "ppppppp"
+            puts e
             nil
         end
     end
