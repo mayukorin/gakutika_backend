@@ -53,6 +53,6 @@ test:
 #
 production:
   <<: *default
-  database: gakutika_backend_production
-  username: gakutika_backend
-  password: <%= ENV['GAKUTIKA_BACKEND_DATABASE_PASSWORD'] %>
+  database: heroku_ff60fe6b7531055
+  username: b9532d0d75a4aa
+  password: 8f400d9d
