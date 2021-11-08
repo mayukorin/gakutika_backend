@@ -7,8 +7,10 @@ class Api::SessionsController < ApplicationController
         if user&.authenticate(session_params[:password])
             exp = Time.now.to_i + 4 * 60
             token = TokenProvider.call(user_id: user.id, exp: exp)
+            puts "メアドとパスワードは合っている"
             render json: { access: token }, status: :ok
         else
+            puts "メアドとパスワードが違う"
             render json: { message: ['メールアドレスかパスワードが間違っています'] }, status: :unauthorized 
         end
      end
