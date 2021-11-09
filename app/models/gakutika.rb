@@ -1,0 +1,2 @@
+class Gakutika < ApplicationRecord
+end
