@@ -7,4 +7,5 @@ class User < ApplicationRecord
                     uniqueness: { case_sensitive: false, message: "そのメールアドレスは既に使われています" }
     has_secure_password
     validates :password, presence: true, length: { minimum: 6 }
+    has_many :gakutikas
 end

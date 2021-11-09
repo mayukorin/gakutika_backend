@@ -5,3 +5,6 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+user = User.find(1)
+user.gakutikas.create!(title: '塾生新聞会での新聞配布', content: '新聞を2月に配布');

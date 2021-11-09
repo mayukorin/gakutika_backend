@@ -9,9 +9,6 @@ class TokenDecryptor
     private
     def decrypt(token)
         begin
-            puts "ooooooo"
-            puts Rails.application.credentials.secret_key_base
-
             JWT.decode(token, Rails.application.credentials.secret_key_base)
         rescue JWT::ExpiredSignature
             puts "ログインの有効期限切れ"
