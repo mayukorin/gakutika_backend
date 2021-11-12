@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   namespace :api do
     resources :users, only: [:create]
     resources :gakutikas, only: [:index]
+    post '/updateToughRank', to: 'gakutikas#update_tough_rank'
     post '/signin', to: 'sessions#create'
     get '/me', to: 'sessions#me'
   end
