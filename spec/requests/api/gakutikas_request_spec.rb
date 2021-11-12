@@ -14,7 +14,8 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it 'status ok と gakutika 一覧を返す' do
                     gakutika1 = user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb")
                     gakutika2 = user.gakutikas.create(title: "cccccc", content: "bbbbbbbbbbbbbb")
-                    puts user.gakutikas
+                    puts gakutika1.id
+                    puts gakutika2.id
                     puts "aaaaaaaaaaaaa"
                     get api_gakutikas_path, headers: { "Authorization" => "JWT " + token }
                     expect(response).to have_http_status(:ok)

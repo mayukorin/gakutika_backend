@@ -1,4 +1,4 @@
 class GakutikaSerializer < ActiveModel::Serializer
-    attributes :title, :content
+    attributes :id, :title, :content, :tough_rank
   end
   

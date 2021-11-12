@@ -6,8 +6,8 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-user = User.find(1)
-# user.gakutikas.create!(title: '塾生新聞会での新聞配布', content: '新聞を2月に配布');
-user.gakutikas.create!(title: '塾生新聞会での新聞配布2', content: '新聞を2月に配布');
-user.gakutikas.create!(title: '塾生新聞会での新聞配布3', content: '新聞を2月に配布');
-user.gakutikas.create!(title: '塾生新聞会での新聞配布4', content: '新聞を2月に配布');
+user = User.find_by(email: 'test@example.com')
+user.gakutikas.create!(title: '塾生新聞会での新聞配布', content: '新聞を2月に配布', tough_rank: 1);
+user.gakutikas.create!(title: '塾生新聞会での新聞配布2', content: '新聞を2月に配布', tough_rank: 2);
+user.gakutikas.create!(title: '塾生新聞会での新聞配布3', content: '新聞を2月に配布', tough_rank: 3);
+user.gakutikas.create!(title: '塾生新聞会での新聞配布4', content: '新聞を2月に配布', tough_rank: 4);
