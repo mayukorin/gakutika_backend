@@ -42,7 +42,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 gakutika2 = user.gakutikas.create(title: "cccccc", content: "bbbbbbbbbbbbbb", tough_rank: 2)
                 g1_id = gakutika1.id
                 g2_id = gakutika2.id
-                post api_updateToughRank_path, headers: { "Authorization" => "JWT " + token }, params: { id_and_new_tough_rank: { "#{g1_id}": "2", "#{g2_id}": "1" } }
+                post api_update_tough_rank_path, headers: { "Authorization" => "JWT " + token }, params: { id_and_new_tough_rank: { "#{g1_id}": "2", "#{g2_id}": "1" } }
                 expect(response).to have_http_status(:ok)
                 expect(gakutika1.reload.tough_rank).to match(2)
                 expect(gakutika2.reload.tough_rank).to match(1)

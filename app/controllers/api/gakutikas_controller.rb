@@ -7,7 +7,12 @@ class Api::GakutikasController < ApplicationController
         render json: @gakutikas, each_serializer: GakutikaSerializer, status: :ok
     end
     def update_tough_rank
+        puts params
+        puts "ooooooooooooooooo"
+        puts tough_rank_update_params
         tough_rank_update_params.each do |id, new_tough_rank| 
+            puts "idは"
+            puts id
             gakutika = Gakutika.find(id)
             gakutika.update(tough_rank: new_tough_rank)
         end
