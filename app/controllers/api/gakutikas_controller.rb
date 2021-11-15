@@ -7,20 +7,32 @@ class Api::GakutikasController < ApplicationController
         render json: @gakutikas, each_serializer: GakutikaSerializer, status: :ok
     end
     def update_tough_rank
-        puts params
-        puts "ooooooooooooooooo"
-        puts tough_rank_update_params
         tough_rank_update_params.each do |id, new_tough_rank| 
-            puts "idは"
-            puts id
             gakutika = Gakutika.find(id)
             gakutika.update(tough_rank: new_tough_rank)
         end
         gakutikas = Gakutika.where(user_id: signin_user(request.headers).id)
         render json: gakutikas, each_serializer: GakutikaSerializer, status: :ok
     end
+    def create
+        attrs = gakutika_params.to_h
+        attrs[:start_month] = Date.strptime(gakutika_params[:start_month], '%Y-%m')
+        attrs[:end_month] = Date.strptime(gakutika_params[:end_month], '%Y-%m')
+        attrs[:tough_rank] = signin_user(request.headers).gakutikas.count + 1
+        @gakutika = signin_user(request.headers).gakutikas.build(attrs)
+        if @gakutika.save  
+            @gakutikas = Gakutika.where(user_id: signin_user(request.headers).id)
+            render json: @gakutika, serializer: GakutikaSerializer, status: :created
+        else
+            render json: @gakutika.errors, status: :bad_request
+        end
+    end
+    
     private
         def tough_rank_update_params
             params.require(:id_and_new_tough_rank)
+        end
+        def gakutika_params
+            params.require(:gakutika).permit(:title, :content, :start_month, :end_month, :tough_rank)
         end
 end
