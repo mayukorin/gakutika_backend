@@ -26,6 +26,43 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 end
             end
         end
+
+        describe "#create" do
+            context "通常の学チカを登録する場合" do
+                let!(:user) do
+                    FactoryBot.create(:user)
+                end
+                let!(:token) do
+                    exp = Time.now.to_i + 4 * 60
+                    TokenProvider.new.call(user_id: user.id, exp: exp)
+                end
+                it 'status created と 作成した学チカを返す' do
+                    post api_gakutikas_path, headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル", content: "内容です", start_month: "2018-11", end_month: "2018-12", tough_rank: 0} }
+                    expect(response).to have_http_status(:created)
+                    user_gakutika_cnt = user.gakutikas.count
+                    expect(user_gakutika_cnt).to match(1)
+                    new_gakutika = user.gakutikas.first
+                    expected_response = { 'id' => new_gakutika.id, 'title' => 'タイトル', 'content' => '内容です', 'tough_rank' => user_gakutika_cnt}
+                    expect(JSON.parse(response.body)).to match(expected_response)
+                end
+            end
+
+            context "start month が入力されていない場合" do
+                let!(:user) do
+                    FactoryBot.create(:user)
+                end
+                let!(:token) do
+                    exp = Time.now.to_i + 4 * 60
+                    TokenProvider.new.call(user_id: user.id, exp: exp)
+                end
+                it 'status bad request と 不正な入力です メッセージを返す' do
+                    post api_gakutikas_path, headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル", content: "内容です", start_month: " ", end_month: "2018-12", tough_rank: 0} }
+                    expect(response).to have_http_status(:bad_request)
+                    expected_response = { 'message' => ['不正な入力です'] }
+                    expect(JSON.parse(response.body)).to match(expected_response)
+                end
+            end
+        end
     end
 
     describe "#updateToughRank" do
