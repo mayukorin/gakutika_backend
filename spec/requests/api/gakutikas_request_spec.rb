@@ -1,6 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe "Api::Gakutikas", type: :request do
+    around(:each) do |example| 
+        show_detailed_exceptions = Rails.application.env_config['action_dispatch.show_detailed_exceptions']
+        show_exceptions          = Rails.application.env_config['action_dispatch.show_exceptions']
+
+        Rails.application.env_config['action_dispatch.show_detailed_exceptions'] = false
+        Rails.application.env_config['action_dispatch.show_exceptions']          = true
+
+        example.run
+
+        Rails.application.env_config['action_dispatch.show_detailed_exceptions'] = show_detailed_exceptions
+        Rails.application.env_config['action_dispatch.show_exceptions']          = show_exceptions
+
+    end
     describe "Gakutikas" do
         describe "#index" do
             context "ユーザの学チカ一覧を取得する場合" do
@@ -62,6 +75,67 @@ RSpec.describe "Api::Gakutikas", type: :request do
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end
+        end
+
+        describe "#show" do
+            context "リクエストされたidが存在する場合" do
+                let!(:user) do
+                    FactoryBot.create(:user)
+                end
+                let!(:token) do
+                    exp = Time.now.to_i + 4 * 60
+                    TokenProvider.new.call(user_id: user.id, exp: exp)
+                end
+                let!(:gakutika) do
+                    user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1)
+                end
+                it 'status ok と該当の学チカを返す' do
+                    get api_gakutika_path(id: gakutika.id)
+                    expect(response).to have_http_status(:ok)
+                    expected_response = {"content"=>"bbbbbbbbbbbbbb", "id"=>gakutika.id, "title"=>"aaaaaa", "tough_rank"=>1}
+                    expect(JSON.parse(response.body)).to match(expected_response)
+                end
+            end
+
+            context "リクエストされたidが存在しない場合" do
+                let!(:user) do
+                    FactoryBot.create(:user)
+                end
+                let!(:token) do
+                    exp = Time.now.to_i + 4 * 60
+                    TokenProvider.new.call(user_id: user.id, exp: exp)
+                end
+                let!(:gakutika) do
+                    user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1)
+                end
+                it 'status bad request と「該当ページが存在しません」を返す' do
+                    get api_gakutika_path(id: gakutika.id+1)
+                    expect(response).to have_http_status(:bad_request)
+                    expected_response = { 'message' => ['該当ページが存在しません'] }
+                    expect(JSON.parse(response.body)).to match(expected_response)
+                end
+            end
+
+            context "idがパラメータに含まれていない場合" do
+                let!(:user) do
+                    FactoryBot.create(:user)
+                end
+                let!(:token) do
+                    exp = Time.now.to_i + 4 * 60
+                    TokenProvider.new.call(user_id: user.id, exp: exp)
+                end
+                let!(:gakutika) do
+                    user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1)
+                end
+                it 'status bad request と「該当ページが存在しません」を返す' do
+                    get api_gakutika_path
+                    expect(response).to have_http_status(:bad_request)
+                    expected_response = { 'message' => ['該当ページが存在しません'] }
+                    expect(JSON.parse(response.body)).to match(expected_response)
+                    
+                end
+            end
+
         end
     end
 

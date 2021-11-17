@@ -1,7 +1,7 @@
 class Api::GakutikasController < ApplicationController
     include Service
     include SigninUser
-    include ExceptionHandler
+    # include ExceptionHandler
     def index
         @gakutikas = Gakutika.where(user_id: signin_user(request.headers).id)
         render json: @gakutikas, each_serializer: GakutikaSerializer, status: :ok
@@ -21,6 +21,10 @@ class Api::GakutikasController < ApplicationController
         else
             render json: @gakutika.errors, status: :bad_request
         end
+    end
+    def show
+        @gakutika = Gakutika.find(params[:id])
+        render json: @gakutika, serializer: GakutikaSerializer, status: :ok
     end
     
     private
