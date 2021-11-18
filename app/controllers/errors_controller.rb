@@ -3,7 +3,7 @@ class ErrorsController < ActionController::Base
     rescue_from Application::AuthenticationError, with: :not_authenticated
     rescue_from ArgumentError, with: :invalid_input
     rescue_from ActiveRecord::RecordNotFound, with: :page_not_found
-    rescue_from UrlGenerationError, with: :page_not_found
+    rescue_from ActionController::UrlGenerationError, with: :page_not_found
     
 
     def raise_error
