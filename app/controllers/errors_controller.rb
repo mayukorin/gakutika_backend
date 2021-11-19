@@ -5,10 +5,10 @@ class ErrorsController < ActionController::Base
     rescue_from ActiveRecord::RecordNotFound, with: :page_not_found
     rescue_from ActionController::UrlGenerationError, with: :page_not_found
     
-
+    
     def raise_error
         puts "エラ――――"
-        raise env['action_dispatch.exception']
+        raise Rails.application.env['action_dispatch.exception']
     end
 
     def not_authenticated
