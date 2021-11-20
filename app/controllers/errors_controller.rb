@@ -2,8 +2,9 @@ class ErrorsController < ActionController::Base
 
     rescue_from Application::AuthenticationError, with: :not_authenticated
     rescue_from ArgumentError, with: :invalid_input
-    rescue_from ActiveRecord::RecordNotFound, with: :page_not_found
-    rescue_from ActionController::UrlGenerationError, with: :page_not_found
+    rescue_from TypeError, with: :invalid_input
+    rescue_from ActiveRecord::RecordNotFound, with: :object_not_found
+    # rescue_from ActionController::UrlGenerationError, with: :_not_found
     
     
     def raise_error
@@ -19,8 +20,8 @@ class ErrorsController < ActionController::Base
         render json: { message: ['不正な入力です']}, status: :bad_request
     end
     
-    def page_not_found
-        render json: { message: ['該当ページが存在しません']}, status: :bad_request
+    def object_not_found
+        render json: { message: ['該当のものが存在しません']}, status: :bad_request
     end
 
 

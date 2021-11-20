@@ -22,9 +22,19 @@ class Api::GakutikasController < ApplicationController
             render json: @gakutika.errors, status: :bad_request
         end
     end
+
     def show
         @gakutika = Gakutika.find(params[:id])
         render json: @gakutika, serializer: GakutikaSerializer, status: :ok
+    end
+
+    def update
+        @gakutika = Gakutika.find(params[:id])
+        if @gakutika.update(gakutika_params_for_save) 
+            render json: @gakutika, serializer: GakutikaSerializer, status: :accepted
+        else
+            render json: @gakutika.errors, status: :bad_request
+        end
     end
     
     private
@@ -35,7 +45,7 @@ class Api::GakutikasController < ApplicationController
             gakutika_params_for_save = gakutika_params.to_h
             gakutika_params_for_save[:start_month] = Date.strptime(gakutika_params[:start_month], '%Y-%m')
             gakutika_params_for_save[:end_month] = Date.strptime(gakutika_params[:end_month], '%Y-%m')
-            gakutika_params_for_save[:tough_rank] = signin_user(request.headers).gakutikas.count + 1
+            gakutika_params_for_save[:tough_rank] = signin_user(request.headers).gakutikas.count + 1 if gakutika_params_for_save[:tough_rank] == "0"
             return gakutika_params_for_save
         end
         def gakutika_params
