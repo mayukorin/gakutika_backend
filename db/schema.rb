@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_15_114944) do
+ActiveRecord::Schema.define(version: 2021_11_21_043303) do
 
   create_table "gakutikas", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "title"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2021_11_15_114944) do
     t.integer "tough_rank"
     t.date "start_month"
     t.date "end_month"
+    t.index ["user_id", "tough_rank"], name: "index_gakutikas_on_user_id_and_tough_rank", unique: true
     t.index ["user_id"], name: "index_gakutikas_on_user_id"
   end
 
