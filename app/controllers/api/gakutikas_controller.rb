@@ -7,6 +7,14 @@ class Api::GakutikasController < ApplicationController
         render json: @gakutikas, each_serializer: GakutikaSerializer, status: :ok
     end
     def update_tough_rank
+        
+        gakutika_cnt = signin_user(request.headers).gakutikas.count
+        
+        tough_rank_update_params.each do |id, new_tough_rank| 
+            gakutika = Gakutika.find(id)
+            gakutika.update(tough_rank: gakutika_cnt+id.to_i)
+        end
+
         tough_rank_update_params.each do |id, new_tough_rank| 
             gakutika = Gakutika.find(id)
             gakutika.update(tough_rank: new_tough_rank)
