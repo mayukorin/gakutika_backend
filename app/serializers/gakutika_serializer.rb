@@ -1,5 +1,6 @@
 class GakutikaSerializer < ActiveModel::Serializer
-    attributes :id, :title, :content, :tough_rank
+    attributes :id, :title, :content
+    attribute :tough_rank, key: :toughRank
     attributes :startMonth
     attributes :endMonth
 

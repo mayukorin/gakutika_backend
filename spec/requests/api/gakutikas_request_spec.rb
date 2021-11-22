@@ -30,6 +30,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                     gakutika1 = user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
                     gakutika2 = user.gakutikas.create(title: "cccccc", content: "bbbbbbbbbbbbbb", tough_rank: 2, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
                     get api_gakutikas_path, headers: { "Authorization" => "JWT " + token }
+                    puts JSON.parse(response.body)
                     expect(response).to have_http_status(:ok)
                 end
             end
@@ -50,7 +51,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                     user_gakutika_cnt = user.gakutikas.count
                     expect(user_gakutika_cnt).to match(1)
                     new_gakutika = user.gakutikas.first
-                    expected_response = { 'content' => '内容です', 'endMonth' => '2018-12', 'id' => new_gakutika.id, 'startMonth' => '2018-11', 'title' => 'タイトル', 'tough_rank' => user_gakutika_cnt }
+                    expected_response = { 'content' => '内容です', 'endMonth' => '2018-12', 'id' => new_gakutika.id, 'startMonth' => '2018-11', 'title' => 'タイトル', 'toughRank' => user_gakutika_cnt }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end
@@ -120,7 +121,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it 'status ok と該当の学チカを返す' do
                     get api_gakutika_path(id: gakutika.id)
                     expect(response).to have_http_status(:ok)
-                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2017-10', 'id' => gakutika.id, 'startMonth' => '2017-09', 'title' => 'aaaaaa', 'tough_rank' => 1 }
+                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2017-10', 'id' => gakutika.id, 'startMonth' => '2017-09', 'title' => 'aaaaaa', 'toughRank' => 1 }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end
@@ -182,7 +183,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it "status accepted と更新した学チカの情報を返す" do
                     patch api_gakutika_path(gakutika.id), params: { gakutika: { title: "タイトル", content: "内容です", start_month: "2018-09", end_month: "2018-12", tough_rank: "1"} }
                     expect(response).to have_http_status(:accepted)
-                    expected_response = { 'content' => '内容です', 'endMonth' => '2018-12', 'id' => gakutika.id, 'startMonth' => '2018-09', 'title' => 'タイトル', 'tough_rank' => 1 }
+                    expected_response = { 'content' => '内容です', 'endMonth' => '2018-12', 'id' => gakutika.id, 'startMonth' => '2018-09', 'title' => 'タイトル', 'toughRank' => 1 }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
 
