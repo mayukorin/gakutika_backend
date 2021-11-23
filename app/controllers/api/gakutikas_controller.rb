@@ -4,7 +4,6 @@ class Api::GakutikasController < ApplicationController
     include ExceptionHandler
     def index
         @gakutikas = Gakutika.where(user_id: signin_user(request.headers).id)
-        puts @gakutikas
         render json: @gakutikas, each_serializer: GakutikaSerializer, status: :ok
     end
     def update_tough_rank

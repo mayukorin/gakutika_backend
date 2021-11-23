@@ -1,5 +1,6 @@
 class Gakutika < ApplicationRecord
     belongs_to :user
+    has_many :questions
     validates :title, presence: { message: "タイトルを入力してください" }
     validates :content, presence: { message: "内容を入力してください" }
     validates :start_month, presence: { message: "開始年月を入力してください" }
