@@ -121,7 +121,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it 'status ok と該当の学チカを返す' do
                     get api_gakutika_path(id: gakutika.id)
                     expect(response).to have_http_status(:ok)
-                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2017-10', 'id' => gakutika.id, 'startMonth' => '2017-09', 'title' => 'aaaaaa', 'toughRank' => 1 }
+                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2017-10', 'id' => gakutika.id, 'questions' => [], 'startMonth' => '2017-09', 'title' => 'aaaaaa', 'toughRank' => 1 }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end

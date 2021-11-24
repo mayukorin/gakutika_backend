@@ -3,6 +3,7 @@ class GakutikaSerializer < ActiveModel::Serializer
     attribute :tough_rank, key: :toughRank
     attributes :startMonth
     attributes :endMonth
+    has_many :questions, serializer: QuestionSerializer, if: -> { show_gakutika_detail }
 
     def startMonth
       object.start_month.strftime("%Y-%m")
@@ -10,6 +11,10 @@ class GakutikaSerializer < ActiveModel::Serializer
 
     def endMonth
       object.end_month.strftime("%Y-%m")
+    end
+
+    def show_gakutika_detail
+      @instance_options[:show_gakutika_detail_flag] == true
     end
 
   end
