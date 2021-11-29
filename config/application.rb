@@ -34,5 +34,9 @@ module GakutikaBackend
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    config.i18n.default_locale = :ja
+    config.i18n.available_locales = :ja
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '*.yml').to_s]
+    config.active_model.i18n_customize_full_message = true
   end
 end

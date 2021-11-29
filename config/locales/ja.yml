@@ -1,0 +1,41 @@
+ja:
+  activerecord:
+    models:
+      user: ユーザー
+      gakutika: 学チカ
+      question: 質問
+    attributes:
+      user:
+        name: 名前
+        email: メールアドレス
+        password: パスワード
+      gakutika:
+        title: タイトル
+        content: 内容
+        start_month: 開始年月
+        end_month: 終了年月
+        tough_rank: 頑張り順
+      question:
+        query: 質問内容
+        answer: 解答
+        gakutika: 学チカ
+      company:
+        name: 企業名
+
+  errors:
+    models:
+      user:
+        attributes:
+          email:
+            format: '%{message}'
+            uniqueness: この%{attribute}は既に使われています
+            bad_email: '%{attribute}は正しい形式で入力してください'
+      gakutika:
+        attributes:
+          tough_rank:
+            format: '%{message}'
+            uniqueness: この${attribute}は既に存在します
+
+      
+        
+      

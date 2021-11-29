@@ -4,13 +4,17 @@ class Api::QuestionsController < ApplicationController
   include ExceptionHandler
 
   def create
-    @company = Company.find_or_create_by(name: question_params[:company_name])
+   
+    @company = Company.find_or_initialize_by(name: question_params[:company_name])
+    unless @company.save
+      render json: { message: @company.errors.full_messages }, status: :bad_request and return
+    end
     @question = @company.questions.build(question_params_for_save)
     
     if @question.save 
       render json: @question, serializer: QuestionSerializer, status: :created
     else
-      render json: @question.errors, status: :bad_request
+      render json: { message: @question.errors.full_messages }, status: :bad_request
     end
   end
   private
