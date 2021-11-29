@@ -163,7 +163,7 @@ RSpec.describe Gakutika, type: :model do
       gakutika1 = user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       gakutika2 = user.gakutikas.build(title: "cccccc", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       expect(gakutika2).not_to be_valid
-      expect(gakutika2.errors.full_messages).to match(["頑張り順はすでに存在します"])
+      expect(gakutika2.errors.full_messages).to match(["頑張り順は既に存在します"])
     end
   end
 

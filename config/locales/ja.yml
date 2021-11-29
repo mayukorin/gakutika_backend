@@ -22,19 +22,20 @@ ja:
       company:
         name: 企業名
 
-  errors:
-    models:
-      user:
-        attributes:
-          email:
-            format: '%{message}'
-            uniqueness: この%{attribute}は既に使われています
-            bad_email: '%{attribute}は正しい形式で入力してください'
-      gakutika:
-        attributes:
-          tough_rank:
-            format: '%{message}'
-            uniqueness: この${attribute}は既に存在します
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              # format: '%{message}'
+              # uniqueness: この%{attribute}は既に使われています
+              taken: は既に使われています
+              invalid: 'は正しい形式で入力してください'
+        gakutika:
+          attributes:
+            tough_rank:
+              # format: '%{message}'
+              taken: は既に存在します
 
       
         

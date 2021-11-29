@@ -46,7 +46,7 @@ RSpec.describe User, type: :model do
         it "無効" do
             user = User.new(email: nil, name: "abcabc", password: "password" )
             expect(user).not_to be_valid
-            expect(user.errors.full_messages).to match(["メールアドレスを入力してください"])
+            expect(user.errors.full_messages).to match(["メールアドレスを入力してください", "メールアドレスは正しい形式で入力してください"])
         end
       end
     
@@ -54,7 +54,7 @@ RSpec.describe User, type: :model do
         it "無効" do
             user = User.new(name: "abcabc",password: "password" )
             expect(user).not_to be_valid
-            expect(user.errors.full_messages).to match(["メールアドレスを入力してください"])
+            expect(user.errors.full_messages).to match(["メールアドレスを入力してください", "メールアドレスは正しい形式で入力してください"])
         end
     end
     
@@ -62,7 +62,7 @@ RSpec.describe User, type: :model do
         it "無効" do
             user = User.new(email: " ", name: "abcabc", password: "password" )
             expect(user).not_to be_valid
-            expect(user.errors.full_messages).to match(["メールアドレスを入力してください"])
+            expect(user.errors.full_messages).to match(["メールアドレスを入力してください", "メールアドレスは正しい形式で入力してください"])
         end
     end
 
@@ -89,7 +89,7 @@ RSpec.describe User, type: :model do
             user1 = User.create(email: "test@example.com", name: "abcabc", password: "password" )
             user2 = User.new(email: "test@example.com", name: "abcabc", password: "password" )
             expect(user2).not_to be_valid
-            expect(user2.errors.full_messages).to match(["このメールアドレスは既に使われています"])
+            expect(user2.errors.full_messages).to match(["メールアドレスは既に使われています"])
         end
     end
     
