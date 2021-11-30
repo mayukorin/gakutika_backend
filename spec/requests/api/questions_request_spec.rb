@@ -235,6 +235,34 @@ RSpec.describe "Api::Questions", type: :request do
       end
 
     end
+
+    describe "#update" do
+      context "通常のquestionを更新する場合" do
+        let!(:user) do
+          FactoryBot.create(:user)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user.id, exp: exp)
+        end
+        let!(:gakutika) do
+            user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+        end
+        let!(:company) do
+          Company.create(name: "あいう")
+        end
+        let!(:question) do
+          gakutika.questions.create(query: "質問内容", answer: "解答", company_id: company.id, day: Date.new(2021, 11, 4))
+        end
+        it 'status accepted と更新した質問を返す' do
+          patch api_question_path(question.id), headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容2", answer: "解答2", company_name: "あいう", day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
+          expect(response).to have_http_status(:accepted)
+          expected_response = { 'id' => question.id, 'query' => '質問内容2', 'answer' => '解答2', 'companyName' => 'あいう', 'day' => '2021-11-04' }
+          expect(JSON.parse(response.body)).to match(expected_response)
+        end
+      end
+    end 
   end
+
 
 end
