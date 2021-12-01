@@ -4,6 +4,7 @@ class Api::QuestionsController < ApplicationController
   include ExceptionHandler
 
   before_action :set_company, only: [:create, :update]
+  before_action :correct_user, only: [:update, :destroy]
 
   def create
    
@@ -39,6 +40,12 @@ class Api::QuestionsController < ApplicationController
     end
   end
 
+  def destroy
+    @question = Question.find(params[:id])
+    @question.destroy
+    render status: :no_content
+  end
+
   private
     
     def set_company
@@ -57,5 +64,10 @@ class Api::QuestionsController < ApplicationController
     end
     def question_params
       params.require(:question).permit(:query, :answer, :company_name, :day, :gakutika_id)
+    end
+
+    def correct_user
+      @gakutika = signin_user(request.headers).gakutikas.find_by(id: question_params[:gakutika_id])
+      render json: { message: ['不正なアクセスです'] }, status: :bad_request if @gakutika.nil?
     end
 end

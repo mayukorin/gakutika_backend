@@ -405,7 +405,7 @@ RSpec.describe "Api::Questions", type: :request do
           gakutika.questions.create(query: "質問内容", answer: "解答", company_id: company.id, day: Date.new(2021, 11, 4))
         end
         it "status bad request と 該当のものが存在しません メッセージを返す" do
-            patch api_gakutika_path(gakutika.id+10), params: { gakutika: { title: "タイトル",  content: "bbbbbbbbbbbbbb", start_month: "2018-09", end_month: "2018-12", tough_rank: "1" } }
+            patch api_gakutika_path(gakutika.id+10), headers: { "Authorization" => "JWT " + token },  params: { gakutika: { title: "タイトル",  content: "bbbbbbbbbbbbbb", start_month: "2018-09", end_month: "2018-12", tough_rank: "1" } }
             expected_response = { 'message' => ['該当のものが存在しません'] }
             expect(JSON.parse(response.body)).to match(expected_response)
         end
