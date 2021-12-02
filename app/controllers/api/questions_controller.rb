@@ -31,7 +31,6 @@ class Api::QuestionsController < ApplicationController
       render json: { message: @company.errors.full_messages }, status: :bad_request and return
     end
     '''
-    @question = Question.find(params[:id])
 
     if @question.update(question_params_for_save)
       render json: @question, serializer: QuestionSerializer, status: :accepted
@@ -41,7 +40,7 @@ class Api::QuestionsController < ApplicationController
   end
 
   def destroy
-    @question = Question.find(params[:id])
+   
     @question.destroy
     render status: :no_content
   end
@@ -67,7 +66,8 @@ class Api::QuestionsController < ApplicationController
     end
 
     def correct_user
-      @gakutika = signin_user(request.headers).gakutikas.find_by(id: question_params[:gakutika_id])
-      render json: { message: ['不正なアクセスです'] }, status: :bad_request if @gakutika.nil?
+      @question = Question.find(params[:id])
+      correct_user_flag = @question.gakutika.user.id == signin_user(request.headers).id
+      render json: { message: ['不正なアクセスです'] }, status: :bad_request unless correct_user_flag
     end
 end
