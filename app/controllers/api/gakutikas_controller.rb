@@ -49,7 +49,7 @@ class Api::GakutikasController < ApplicationController
     end
 
     def destroy
-        @question.destroy
+        @gakutika.destroy
         render status: :no_content
     end
     
