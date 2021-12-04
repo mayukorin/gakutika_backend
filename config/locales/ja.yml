@@ -4,6 +4,7 @@ ja:
       user: ユーザー
       gakutika: 学チカ
       question: 質問
+      company: 企業
     attributes:
       user:
         name: 名前
@@ -19,6 +20,7 @@ ja:
         query: 質問内容
         answer: 解答
         gakutika: 学チカ
+        company: 企業
       company:
         name: 企業名
 
