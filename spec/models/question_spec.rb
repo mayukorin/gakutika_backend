@@ -176,4 +176,116 @@ RSpec.describe Question, type: :model do
       expect(question.errors.full_messages).to match(["企業を入力してください"])
     end
   end
+  context "day が nil の場合" do
+    let!(:user) do
+      FactoryBot.create(:user)
+    end
+    let!(:gakutika) do
+      user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+    end
+    let!(:company) do
+      FactoryBot.create(:company)
+    end
+    it "無効" do
+      question = gakutika.questions.build(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id, day: nil)
+      expect(question).not_to be_valid
+      expect(question.errors.full_messages).to match(["日付けを入力してください"])
+    end
+  end
+  context "day が 空白 の場合" do
+    let!(:user) do
+      FactoryBot.create(:user)
+    end
+    let!(:gakutika) do
+      user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+    end
+    let!(:company) do
+      FactoryBot.create(:company)
+    end
+    it "無効" do
+      question = gakutika.questions.build(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id, day: " ")
+      expect(question).not_to be_valid
+      expect(question.errors.full_messages).to match(["日付けを入力してください"])
+    end
+  end
+  context "day が ない 場合" do
+    let!(:user) do
+      FactoryBot.create(:user)
+    end
+    let!(:gakutika) do
+      user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+    end
+    let!(:company) do
+      FactoryBot.create(:company)
+    end
+    it "無効" do
+      question = gakutika.questions.build(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id)
+      expect(question).not_to be_valid
+      expect(question.errors.full_messages).to match(["日付けを入力してください"])
+    end
+  end
+  context "gakutika_id が nil の場合" do
+    let!(:user) do
+      FactoryBot.create(:user)
+    end
+    let!(:gakutika) do
+      user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+    end
+    let!(:company) do
+      FactoryBot.create(:company)
+    end
+    it "無効" do
+      question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id, gakutika_id: nil, day: Date.new(2017,10,7))
+      expect(question).not_to be_valid
+      expect(question.errors.full_messages).to match(["学チカを入力してください"])
+    end
+  end
+  context "gakutika_id が 空白の場合" do
+    let!(:user) do
+      FactoryBot.create(:user)
+    end
+    let!(:gakutika) do
+      user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+    end
+    let!(:company) do
+      FactoryBot.create(:company)
+    end
+    it "無効" do
+      question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id, gakutika_id: " ", day: Date.new(2017,10,7))
+      expect(question).not_to be_valid
+      expect(question.errors.full_messages).to match(["学チカを入力してください"])
+    end
+  end
+  context "gakutika_id がない場合" do
+    let!(:user) do
+      FactoryBot.create(:user)
+    end
+    let!(:gakutika) do
+      user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+    end
+    let!(:company) do
+      FactoryBot.create(:company)
+    end
+    it "無効" do
+      question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id, day: Date.new(2017,10,7))
+      expect(question).not_to be_valid
+      expect(question.errors.full_messages).to match(["学チカを入力してください"])
+    end
+  end
+  context "gakutika_id に一致する gakutikaがない場合" do
+    let!(:user) do
+      FactoryBot.create(:user)
+    end
+    let!(:gakutika) do
+      user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+    end
+    let!(:company) do
+      FactoryBot.create(:company)
+    end
+    it "無効" do
+      question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id, gakutika_id: gakutika.id+10, day: Date.new(2017,10,7))
+      expect(question).not_to be_valid
+      expect(question.errors.full_messages).to match(["学チカを入力してください"])
+    end
+  end
 end
