@@ -8,6 +8,7 @@ included do
     rescue_from TypeError, with: :invalid_input
     rescue_from  ActionController::UnpermittedParameters, with: :invalid_input
     rescue_from  ActionController::ParameterMissing, with: :invalid_input
+    # rescue_from ActiveRecord::InvalidForeignKey, with: :invalid_input
     rescue_from ActiveRecord::RecordNotFound, with: :object_not_found
     # rescue_from ActionController::UrlGenerationError, with: :object_not_found
 end

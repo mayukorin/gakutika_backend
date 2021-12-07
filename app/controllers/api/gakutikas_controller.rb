@@ -2,6 +2,9 @@ class Api::GakutikasController < ApplicationController
     include Service
     include SigninUser
     include ExceptionHandler
+
+    before_action :correct_user, only: [:destroy, :update]
+
     def index
         @gakutikas = Gakutika.where(user_id: signin_user(request.headers).id)
         render json: @gakutikas, each_serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :ok
@@ -37,12 +40,17 @@ class Api::GakutikasController < ApplicationController
     end
 
     def update
-        @gakutika = Gakutika.find(params[:id])
+        
         if @gakutika.update(gakutika_params_for_save) 
             render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :accepted
         else
             render json: @gakutika.errors, status: :bad_request
         end
+    end
+
+    def destroy
+        @gakutika.destroy
+        render status: :no_content
     end
     
     private
@@ -58,5 +66,9 @@ class Api::GakutikasController < ApplicationController
         end
         def gakutika_params
             params.require(:gakutika).permit(:title, :content, :start_month, :end_month, :tough_rank)
+        end
+        def correct_user
+            @gakutika = signin_user(request.headers).gakutikas.find(params[:id])
+            render json: { message: ['不正なアクセスです'] }, status: :bad_request if @gakutika.nil?
         end
 end
