@@ -119,7 +119,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                     user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
                 end
                 it 'status ok と該当の学チカを返す' do
-                    get api_gakutika_path(id: gakutika.id)
+                    get api_gakutika_path(id: gakutika.id), headers: { "Authorization" => "JWT " + token }
                     expect(response).to have_http_status(:ok)
                     expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2017-10', 'id' => gakutika.id, 'questions' => [], 'startMonth' => '2017-09', 'title' => 'aaaaaa', 'toughRank' => 1 }
                     expect(JSON.parse(response.body)).to match(expected_response)
@@ -138,7 +138,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                     user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
                 end
                 it 'status bad request と「該当のものが存在しません」を返す' do
-                    get api_gakutika_path(id: gakutika.id+1)
+                    get api_gakutika_path(id: gakutika.id+1), headers: { "Authorization" => "JWT " + token }
                     expect(response).to have_http_status(:bad_request)
                     expected_response = { 'message' => ['該当のものが存在しません'] }
                     expect(JSON.parse(response.body)).to match(expected_response)
