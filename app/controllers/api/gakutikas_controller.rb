@@ -3,7 +3,8 @@ class Api::GakutikasController < ApplicationController
     include SigninUser
     include ExceptionHandler
 
-    before_action :correct_user, only: [:destroy, :update, :show]
+    before_action :is_gakutika_of_user, only: [:destroy, :update, :show]
+    before_action :is_gakutikas_of_user, only: [:update_tough_rank]
 
     def index
         @gakutikas = Gakutika.where(user_id: signin_user(request.headers).id)
@@ -11,13 +12,6 @@ class Api::GakutikasController < ApplicationController
     end
     def update_tough_rank
         
-        gakutika_cnt = signin_user(request.headers).gakutikas.count
-        
-        tough_rank_update_params.each do |id, new_tough_rank| 
-            gakutika = Gakutika.find(id)
-            gakutika.update(tough_rank: gakutika_cnt+id.to_i)
-        end
-
         tough_rank_update_params.each do |id, new_tough_rank| 
             gakutika = Gakutika.find(id)
             gakutika.update(tough_rank: new_tough_rank)
@@ -66,8 +60,16 @@ class Api::GakutikasController < ApplicationController
         def gakutika_params
             params.require(:gakutika).permit(:title, :content, :start_month, :end_month, :tough_rank)
         end
-        def correct_user
-            @gakutika = signin_user(request.headers).gakutikas.eager_load(:questions, questions: :company).find(params[:id])
-            render json: { message: ['不正なアクセスです'] }, status: :bad_request if @gakutika.nil?
+        def is_gakutika_of_user
+            @gakutika = signin_user(request.headers).gakutikas.eager_load(:questions, questions: :company).find_by(id: params[:id])
+            render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request if @gakutika.nil?
+        end
+        def is_gakutikas_of_user
+            gakutika_cnt = signin_user(request.headers).gakutikas.count
+            tough_rank_update_params.each do |id, new_tough_rank| 
+                gakutika = Gakutika.find_by(id: id)
+                render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request if gakutika.nil?
+                gakutika.update(tough_rank: gakutika_cnt+id.to_i)
+            end
         end
 end

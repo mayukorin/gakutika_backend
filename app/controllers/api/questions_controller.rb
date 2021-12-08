@@ -4,7 +4,7 @@ class Api::QuestionsController < ApplicationController
   include ExceptionHandler
 
   before_action :set_company, only: [:create, :update]
-  before_action :correct_user, only: [:update, :destroy]
+  before_action :is_question_of_user, only: [:update, :destroy]
 
   def create
    
@@ -65,9 +65,9 @@ class Api::QuestionsController < ApplicationController
       params.require(:question).permit(:query, :answer, :company_name, :day, :gakutika_id)
     end
 
-    def correct_user
-      @question = Question.find(params[:id])
-      correct_user_flag = @question.gakutika.user.id == signin_user(request.headers).id
-      render json: { message: ['不正なアクセスです'] }, status: :bad_request unless correct_user_flag
+    def is_question_of_user
+      @question = Question.find_by(id: params[:id])
+      correct_user_flag = @question&.gakutika&.user&.id == signin_user(request.headers).id
+      render json: { message: ['該当する質問が存在しません'] }, status: :bad_request unless correct_user_flag
     end
 end
