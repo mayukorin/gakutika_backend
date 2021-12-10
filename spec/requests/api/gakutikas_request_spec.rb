@@ -56,6 +56,21 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 end
             end
 
+            context "通常の学チカを登録する場合" do
+                let!(:user) do
+                    FactoryBot.create(:user)
+                end
+                let!(:token) do
+                    exp = Time.now.to_i + 4 * 60
+                    TokenProvider.new.call(user_id: user.id, exp: exp)
+                end
+                it 'status created と 作成した学チカを返す2' do
+                    post api_gakutikas_path, headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: " ", content: " ", start_month: "2018-11", end_month: "2018-12", tough_rank: "0"} }
+                    puts ("2です")
+                    puts (JSON.parse(response.body))
+                end
+            end
+
             context "start month が入力されていない場合" do
                 let!(:user) do
                     FactoryBot.create(:user)

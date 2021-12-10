@@ -21,10 +21,13 @@ class Api::GakutikasController < ApplicationController
     end
     def create
         @gakutika = signin_user(request.headers).gakutikas.build(gakutika_params_for_save)
-        if @gakutika.save  
+        puts "hhhhhh"
+        puts @gakutika.tough_rank
+        if @gakutika.save 
+            puts "aaaaaggggggg"
             render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :created
         else
-            render json: @gakutika.errors, status: :bad_request
+            render json: @gakutika.errors.full_messages, status: :bad_request
         end
     end
 
@@ -37,12 +40,18 @@ class Api::GakutikasController < ApplicationController
         if @gakutika.update(gakutika_params_for_save) 
             render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :accepted
         else
-            render json: @gakutika.errors, status: :bad_request
+            render json: @gakutika.errors.full_messages, status: :bad_request
         end
     end
 
     def destroy
+        tough_rank = @gakutika.tough_rank
         @gakutika.destroy
+        under_tough_rank_gakutikas = signin_user(request.headers).gakutikas.where("tough_rank > ?", tough_rank)
+        under_tough_rank_gakutikas.map {|gakutika|
+            gakutika.tough_rank = gakutika.tough_rank-1;
+            gakutika.save
+        }
         render status: :no_content
     end
     
@@ -55,6 +64,8 @@ class Api::GakutikasController < ApplicationController
             gakutika_params_for_save[:start_month] = Date.strptime(gakutika_params[:start_month], '%Y-%m')
             gakutika_params_for_save[:end_month] = Date.strptime(gakutika_params[:end_month], '%Y-%m')
             gakutika_params_for_save[:tough_rank] = signin_user(request.headers).gakutikas.count + 1 if gakutika_params_for_save[:tough_rank] == "0"
+            puts "aaaa"
+            puts gakutika_params_for_save[:tough_rank]
             return gakutika_params_for_save
         end
         def gakutika_params
