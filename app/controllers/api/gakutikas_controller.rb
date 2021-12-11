@@ -21,10 +21,8 @@ class Api::GakutikasController < ApplicationController
     end
     def create
         @gakutika = signin_user(request.headers).gakutikas.build(gakutika_params_for_save)
-        puts "hhhhhh"
-        puts @gakutika.tough_rank
+        
         if @gakutika.save 
-            puts "aaaaaggggggg"
             render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :created
         else
             render json: @gakutika.errors.full_messages, status: :bad_request
@@ -64,8 +62,6 @@ class Api::GakutikasController < ApplicationController
             gakutika_params_for_save[:start_month] = Date.strptime(gakutika_params[:start_month], '%Y-%m')
             gakutika_params_for_save[:end_month] = Date.strptime(gakutika_params[:end_month], '%Y-%m')
             gakutika_params_for_save[:tough_rank] = signin_user(request.headers).gakutikas.count + 1 if gakutika_params_for_save[:tough_rank] == "0"
-            puts "aaaa"
-            puts gakutika_params_for_save[:tough_rank]
             return gakutika_params_for_save
         end
         def gakutika_params

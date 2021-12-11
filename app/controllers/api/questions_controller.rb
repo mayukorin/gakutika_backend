@@ -18,6 +18,8 @@ class Api::QuestionsController < ApplicationController
     @question = Question.new(question_params_for_save)
 
     if @question.save 
+      @user_and_company_and_gakutika = UserAndCompanyAndGakutika.find_or_initialize_by(user_and_company_id: @user_and_company.id, gakutika_id: @question.gakutika_id)
+      @user_and_company_and_gakutika.save
       render json: @question, serializer: QuestionSerializer, status: :created
     else
       render json: { message: @question.errors.full_messages }, status: :bad_request
@@ -52,6 +54,8 @@ class Api::QuestionsController < ApplicationController
       unless @company.save
         render json: { message: @company.errors.full_messages }, status: :bad_request and return
       end
+      @user_and_company = UserAndCompany.find_or_initialize_by(company_id: @company.id, user_id: signin_user(request.headers).id)
+      @user_and_company.save
     end
 
     def question_params_for_save
