@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_22_065903) do
+ActiveRecord::Schema.define(version: 2021_12_11_101945) do
 
   create_table "companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
@@ -43,6 +43,24 @@ ActiveRecord::Schema.define(version: 2021_11_22_065903) do
     t.index ["gakutika_id"], name: "index_questions_on_gakutika_id"
   end
 
+  create_table "user_and_companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "company_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["company_id"], name: "index_user_and_companies_on_company_id"
+    t.index ["user_id"], name: "index_user_and_companies_on_user_id"
+  end
+
+  create_table "user_and_company_and_gakutikas", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "gakutika_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_and_company_id"
+    t.index ["gakutika_id"], name: "index_user_and_company_and_gakutikas_on_gakutika_id"
+    t.index ["user_and_company_id"], name: "index_user_and_company_and_gakutikas_on_user_and_company_id"
+  end
+
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -55,4 +73,8 @@ ActiveRecord::Schema.define(version: 2021_11_22_065903) do
   add_foreign_key "gakutikas", "users"
   add_foreign_key "questions", "companies"
   add_foreign_key "questions", "gakutikas"
+  add_foreign_key "user_and_companies", "companies"
+  add_foreign_key "user_and_companies", "users"
+  add_foreign_key "user_and_company_and_gakutikas", "gakutikas"
+  add_foreign_key "user_and_company_and_gakutikas", "user_and_companies"
 end

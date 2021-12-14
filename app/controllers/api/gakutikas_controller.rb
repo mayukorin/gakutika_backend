@@ -3,7 +3,8 @@ class Api::GakutikasController < ApplicationController
     include SigninUser
     include ExceptionHandler
 
-    before_action :correct_user, only: [:destroy, :update]
+    before_action :is_gakutika_of_user, only: [:destroy, :update, :show]
+    before_action :is_gakutikas_of_user, only: [:update_tough_rank]
 
     def index
         @gakutikas = Gakutika.where(user_id: signin_user(request.headers).id)
@@ -11,13 +12,6 @@ class Api::GakutikasController < ApplicationController
     end
     def update_tough_rank
         
-        gakutika_cnt = signin_user(request.headers).gakutikas.count
-        
-        tough_rank_update_params.each do |id, new_tough_rank| 
-            gakutika = Gakutika.find(id)
-            gakutika.update(tough_rank: gakutika_cnt+id.to_i)
-        end
-
         tough_rank_update_params.each do |id, new_tough_rank| 
             gakutika = Gakutika.find(id)
             gakutika.update(tough_rank: new_tough_rank)
@@ -27,15 +21,15 @@ class Api::GakutikasController < ApplicationController
     end
     def create
         @gakutika = signin_user(request.headers).gakutikas.build(gakutika_params_for_save)
-        if @gakutika.save  
+        
+        if @gakutika.save 
             render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :created
         else
-            render json: @gakutika.errors, status: :bad_request
+            render json: @gakutika.errors.full_messages, status: :bad_request
         end
     end
 
     def show
-        @gakutika = Gakutika.eager_load(:questions, questions: :company).find(params[:id])
         render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: true, status: :ok
     end
 
@@ -44,12 +38,18 @@ class Api::GakutikasController < ApplicationController
         if @gakutika.update(gakutika_params_for_save) 
             render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :accepted
         else
-            render json: @gakutika.errors, status: :bad_request
+            render json: @gakutika.errors.full_messages, status: :bad_request
         end
     end
 
     def destroy
+        tough_rank = @gakutika.tough_rank
         @gakutika.destroy
+        under_tough_rank_gakutikas = signin_user(request.headers).gakutikas.where("tough_rank > ?", tough_rank)
+        under_tough_rank_gakutikas.map {|gakutika|
+            gakutika.tough_rank = gakutika.tough_rank-1;
+            gakutika.save
+        }
         render status: :no_content
     end
     
@@ -67,8 +67,16 @@ class Api::GakutikasController < ApplicationController
         def gakutika_params
             params.require(:gakutika).permit(:title, :content, :start_month, :end_month, :tough_rank)
         end
-        def correct_user
-            @gakutika = signin_user(request.headers).gakutikas.find(params[:id])
-            render json: { message: ['不正なアクセスです'] }, status: :bad_request if @gakutika.nil?
+        def is_gakutika_of_user
+            @gakutika = signin_user(request.headers).gakutikas.eager_load(:questions, questions: :company).find_by(id: params[:id])
+            render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request if @gakutika.nil?
+        end
+        def is_gakutikas_of_user
+            gakutika_cnt = signin_user(request.headers).gakutikas.count
+            tough_rank_update_params.each do |id, new_tough_rank| 
+                gakutika = Gakutika.find_by(id: id)
+                render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request if gakutika.nil?
+                gakutika.update(tough_rank: gakutika_cnt+id.to_i)
+            end
         end
 end

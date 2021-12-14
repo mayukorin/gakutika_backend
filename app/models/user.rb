@@ -8,4 +8,6 @@ class User < ApplicationRecord
     has_secure_password
     validates :password, presence: true, length: { minimum: 6 }
     has_many :gakutikas
+    has_many :user_and_companies, dependent: :destroy
+    has_many :companies, through: :user_and_companies
 end
