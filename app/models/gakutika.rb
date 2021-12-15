@@ -1,6 +1,7 @@
 class Gakutika < ApplicationRecord
     belongs_to :user
     has_many :questions, dependent: :destroy
+    has_many :user_and_company_and_gakutikas, dependent: :destroy
     validates :title, presence: true
     validates :content, presence: true
     validates :start_month, presence: true
