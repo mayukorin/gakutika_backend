@@ -126,12 +126,21 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 let!(:user) do
                     FactoryBot.create(:user)
                 end
+                let!(:company) do
+                    FactoryBot.create(:company)
+                end
+                let!(:user_and_company) do
+                    UserAndCompany.create(company_id: company.id, user_id: user.id)
+                end
                 let!(:token) do
                     exp = Time.now.to_i + 4 * 60 
                     TokenProvider.new.call(user_id: user.id, exp: exp)
                 end
                 let!(:gakutika) do
                     user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+                end
+                let(:user_and_company_and_gakutika) do
+                    UserAndCompanyAndGakutika.create(gakutika_id: gakutika.id, user_and_company_id: user_and_company.id)
                 end
                 it 'status ok と該当の学チカを返す' do
                     get api_gakutika_path(id: gakutika.id), headers: { "Authorization" => "JWT " + token }

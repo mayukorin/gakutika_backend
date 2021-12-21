@@ -8,4 +8,5 @@ class Gakutika < ApplicationRecord
     validates :end_month, presence: true
     validates :tough_rank, numericality: { only_integer: true, greater_than: 0 },
                             uniqueness: { scope: :user_id }
+    has_many :companies, through: :user_and_company_and_gakutikas
 end

@@ -68,7 +68,7 @@ class Api::GakutikasController < ApplicationController
             params.require(:gakutika).permit(:title, :content, :start_month, :end_month, :tough_rank)
         end
         def is_gakutika_of_user
-            @gakutika = signin_user(request.headers).gakutikas.eager_load(:questions, questions: :company, user_and_company_and_gakutikas: [user_and_company: :company]).find_by(id: params[:id])
+            @gakutika = signin_user(request.headers).gakutikas.eager_load(:questions, :companies, questions: :company, user_and_company_and_gakutikas: :company).find_by(id: params[:id])
             render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request if @gakutika.nil?
         end
         def is_gakutikas_of_user
