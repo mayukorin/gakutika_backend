@@ -24,15 +24,14 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         let(:user_and_company_and_gakutika) do
             UserAndCompanyAndGakutika.create(gakutika_id: gakutika.id, user_and_company_id: user_and_company.id)
         end
+        let!(:question) do
+          gakutika.questions.create(query: "質問内容", answer: "解答", company_id: company.id, day: Date.new(2021, 11, 4))
+        end
         it 'status no content を返す' do
-          # puts user_and_company_and_gakutika.id
-          # puts UserAndCompanyAndGakutika.find_by(id: user_and_company_and_gakutika.id)
-          puts "what!?"
-          puts user.id
           delete api_user_and_company_and_gakutika_path(user_and_company_and_gakutika.id), headers: { "Authorization" => "JWT " + token }
-          # puts JSON.parse(response.body)
           expect(response).to have_http_status(:no_content)
           expect(UserAndCompanyAndGakutika.count).to match(0)
+          expect(Question.count).to match(0)
         end
       end
     end

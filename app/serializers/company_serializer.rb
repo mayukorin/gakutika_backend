@@ -1,10 +1,9 @@
 class CompanySerializer < ActiveModel::Serializer
     attribute :name
-    attribute :gakutikas, serializer: GakutikaSerializer 
+    attribute :user_and_company, serializer: UserAndCompanySerializer
 
-    def gakutikas
+    def user_and_company
         user_and_company = UserAndCompany.find_by(user_id: @instance_options[:user_id], company_id: object.id)
-        return user_and_company.gakutikas
     end
     
 end

@@ -1,13 +1,7 @@
 class UserAndCompanyAndGakutikaSerializer < ActiveModel::Serializer
     belongs_to :user_and_company, serializer: UserAndCompanySerializer  
-    attributes :id, :company_id, :companyName
+    belongs_to :gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false
+    attributes :id
     has_one :company
 
-    def companyName
-        "aaaa"
-    end
-
-    def company_id
-        "bbbb"
-    end
 end
