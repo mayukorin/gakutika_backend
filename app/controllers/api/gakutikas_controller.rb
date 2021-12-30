@@ -30,7 +30,7 @@ class Api::GakutikasController < ApplicationController
     end
 
     def show
-        render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: true, user_id: signin_user(request.headers).id, status: :ok
+        render json: @gakutika, serializer: GakutikaSerializer, include: { user_and_companies: [:company, user_and_company_and_gakutikas: :gakutika ]}, show_gakutika_detail_flag: true, user_id: signin_user(request.headers).id, status: :ok
     end
 
     def update
@@ -68,7 +68,8 @@ class Api::GakutikasController < ApplicationController
             params.require(:gakutika).permit(:title, :content, :start_month, :end_month, :tough_rank)
         end
         def is_gakutika_of_user
-            @gakutika = signin_user(request.headers).gakutikas.eager_load(:questions, :companies, questions: :company, user_and_company_and_gakutikas: :company).find_by(id: params[:id])
+            # @gakutika = signin_user(request.headers).gakutikas.eager_load(companies: :user_and_companies, questions: :company, user_and_company_and_gakutikas: :company).find_by(id: params[:id])
+            @gakutika = signin_user(request.headers).gakutikas.eager_load(user_and_companies: [:company, user_and_company_and_gakutikas: :gakutika], questions: :company).find_by(id: params[:id])
             render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request if @gakutika.nil?
         end
         def is_gakutikas_of_user

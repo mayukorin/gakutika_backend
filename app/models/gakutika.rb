@@ -9,4 +9,5 @@ class Gakutika < ApplicationRecord
     validates :tough_rank, numericality: { only_integer: true, greater_than: 0 },
                             uniqueness: { scope: :user_id }
     has_many :companies, through: :user_and_company_and_gakutikas
+    has_many :user_and_companies, through: :user_and_company_and_gakutikas
 end

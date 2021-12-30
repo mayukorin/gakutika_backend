@@ -1,4 +1,14 @@
 class UserAndCompanySerializer < ActiveModel::Serializer
-    belongs_to :company, serializer: CompanySerializer
-    has_many :user_and_company_and_gakutikas, serializer: UserAndCompanyAndGakutikaSerializer
+    attribute :id
+    belongs_to :company
+    has_many :user_and_company_and_gakutikas
+    '''
+    def company
+        CompanySerializer.new(object.company)
+    end
+
+    def user_and_company_and_gakutikas
+        UserAndCompanyAndGakutikaSerializer.new(object.user_and_company_and_gakutikas.first)
+    end
+    '''
 end
