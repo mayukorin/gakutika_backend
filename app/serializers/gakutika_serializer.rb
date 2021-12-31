@@ -3,7 +3,7 @@ class GakutikaSerializer < ActiveModel::Serializer
     attribute :tough_rank, key: :toughRank
     attributes :startMonth
     attributes :endMonth
-    has_many :questions, serializer: QuestionSerializer, if: -> { show_gakutika_detail }
+    has_many :questions, serializer: QuestionSerializer # , if: -> { show_gakutika_detail }
     # has_many :user_and_company_and_gakutikas, serializer: UserAndCompanyAndGakutikaSerializer, if: -> { show_gakutika_detail }
     has_many :user_and_companies, serializer: UserAndCompanySerializer
     # has_many :companies, serializer: CompanySerializer, if: -> { show_gakutika_detail }
@@ -20,6 +20,11 @@ class GakutikaSerializer < ActiveModel::Serializer
     def show_gakutika_detail
       @instance_options[:show_gakutika_detail_flag] == true
     end
+    '''
+    def questions
+      object.questions 
+    end
+    '''
 
     
 
