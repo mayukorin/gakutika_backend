@@ -52,7 +52,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
         it 'status created を返す' do
-          post api_user_and_company_and_gakutikas_path, headers: { "Authorization" => "JWT " + token }
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_id: gakutika.id }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:created)
         end
       end
