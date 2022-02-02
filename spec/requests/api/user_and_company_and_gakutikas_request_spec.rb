@@ -79,7 +79,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         end
       end
 
-      context "gakutika_idで他人の学チカを指定しているとき" do
+      context "gakutika_id で他人の学チカを指定しているとき" do
         let!(:user) do
           FactoryBot.create(:user)
         end
@@ -102,6 +102,32 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
           expected_response = { 'message' => ['不正な入力です'] }
           expect(JSON.parse(response.body)).to match(expected_response)
         end
+      end
+
+      context "user_and_company が既に存在しているとき" do
+        let!(:user) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:user_and_company) do
+          UserAndCompany.create(user_id: user.id, company_id: company.id)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user.id, exp: exp)
+        end
+        let!(:gakutika) do
+            user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+        end
+        
+        it 'status created を返す' do
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name, gakutika_id: gakutika.id }}, headers: { "Authorization" => "JWT " + token }
+          expect(UserAndCompany.count).to match(1)
+          expect(response).to have_http_status(:created)
+        end
+
       end
     end
   end

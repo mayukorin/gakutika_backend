@@ -13,7 +13,7 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
   def create
     @company = Company.find_or_create_by(name: user_and_company_and_gakutika_params[:company_name])
     # @user_and_company = UserAndCompany.create(company_id: @company.id, user_id: signin_user(request.headers).id)
-    @user_and_company = @company.user_and_companies.create(user_id: signin_user(request.headers).id)
+    @user_and_company = @company.user_and_companies.find_or_create_by(user_id: signin_user(request.headers).id)
     @user_and_company_and_gakutika = @user_and_company.user_and_company_and_gakutikas.build(gakutika_id: @gakutika.id)
 
     if @user_and_company_and_gakutika.save
