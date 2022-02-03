@@ -33,7 +33,7 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
      
       render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request unless @user_and_company_and_gakutika.user.id == signin_user(request.headers).id
     end
-
+    
     def user_and_company_and_gakutika_params
       params.require(:user_and_company_and_gakutika).permit(:company_name, :gakutika_title)
     end
