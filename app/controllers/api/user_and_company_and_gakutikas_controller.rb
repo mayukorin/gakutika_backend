@@ -29,17 +29,17 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
   private
     def correct_user
       
-      @user_and_company_and_gakutika = UserAndCompanyAndGakutika.eager_load(:user).find_by(id: params[:id])
+      @user_and_company_and_gakutika = UserAndCompanyAndGakutika.eager_load(:user).find_by!(id: params[:id])
      
       render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request unless @user_and_company_and_gakutika.user.id == signin_user(request.headers).id
     end
 
     def user_and_company_and_gakutika_params
-      params.require(:user_and_company_and_gakutika).permit(:company_name, :gakutika_id)
+      params.require(:user_and_company_and_gakutika).permit(:company_name, :gakutika_title)
     end
 
     def correct_user2
-      @gakutika = Gakutika.find(user_and_company_and_gakutika_params[:gakutika_id])
+      @gakutika = Gakutika.find_by!(title: user_and_company_and_gakutika_params[:gakutika_title])
       render json: { message: ['不正な入力です'] }, status: :bad_request unless @gakutika.user.id == signin_user(request.headers).id
     end
 end

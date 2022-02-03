@@ -52,7 +52,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
         it 'status created を返す' do
-          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_id: gakutika.id }}, headers: { "Authorization" => "JWT " + token }
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:created)
         end
       end
@@ -72,7 +72,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
         it 'status bad request を返す' do
-          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_id: gakutika.id+1 }}, headers: { "Authorization" => "JWT " + token }
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: "なし" }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
           expected_response = { 'message' => ['該当のものが存在しません'] }
           expect(JSON.parse(response.body)).to match(expected_response)
@@ -97,7 +97,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             user2.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
         it 'status bad request を返す' do
-          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_id: gakutika.id }}, headers: { "Authorization" => "JWT " + token }
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
           expected_response = { 'message' => ['不正な入力です'] }
           expect(JSON.parse(response.body)).to match(expected_response)
@@ -123,7 +123,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         end
         
         it 'status created を返す' do
-          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name, gakutika_id: gakutika.id }}, headers: { "Authorization" => "JWT " + token }
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name, gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(UserAndCompany.count).to match(1)
           expect(response).to have_http_status(:created)
         end
@@ -151,7 +151,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
           user_and_company.user_and_company_and_gakutikas.create(gakutika_id: gakutika.id, user_and_company_id: user_and_company.id)
         end
         it 'もともとその企業でその学チカを話す予定です を返す' do
-          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name, gakutika_id: gakutika.id }}, headers: { "Authorization" => "JWT " + token }
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name, gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
           expected_response = { 'message' => ['もともとその企業でその学チカを話す予定です'] }
           expect(JSON.parse(response.body)).to match(expected_response)
