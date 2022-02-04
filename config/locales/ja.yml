@@ -25,8 +25,11 @@ ja:
         day: 日付け
       company:
         name: 企業名
+      user_and_company:
+        company: 企業名
       user_and_company_and_gakutika:
         user_and_company: 企業
+        gakutika: 学チカ
   
     errors:
       models:
