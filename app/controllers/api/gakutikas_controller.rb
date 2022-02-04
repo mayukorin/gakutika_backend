@@ -25,7 +25,7 @@ class Api::GakutikasController < ApplicationController
         if @gakutika.save 
             render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :created
         else
-            render json: @gakutika.errors.full_messages, status: :bad_request
+            render json: { message: @gakutika.errors.full_messages }, status: :bad_request
         end
     end
 
@@ -38,7 +38,7 @@ class Api::GakutikasController < ApplicationController
         if @gakutika.update(gakutika_params_for_save) 
             render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :accepted
         else
-            render json: @gakutika.errors.full_messages, status: :bad_request
+            render json: { message: @gakutika.errors.full_messages }, status: :bad_request
         end
     end
 
