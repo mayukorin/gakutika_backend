@@ -158,6 +158,106 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         end
       end
 
+      context "gakutika_title が入力されていない時" do
+        let!(:user) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user.id, exp: exp)
+        end
+        let!(:gakutika) do
+          user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+        end
+        let!(:user_and_company) do
+          UserAndCompany.create(user_id: user.id, company_id: company.id)
+        end
+        it 'status bad request を返す' do
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name, gakutika_title: " " }}, headers: { "Authorization" => "JWT " + token }
+          expect(response).to have_http_status(:bad_request)
+          expected_response = { 'message' => ['該当のものが存在しません'] }
+          expect(JSON.parse(response.body)).to match(expected_response)
+        end
+      end
+
+      context "gakutika_title が param に存在しない時" do
+        let!(:user) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user.id, exp: exp)
+        end
+        let!(:gakutika) do
+          user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+        end
+        let!(:user_and_company) do
+          UserAndCompany.create(user_id: user.id, company_id: company.id)
+        end
+        it 'status bad request を返す' do
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name}}, headers: { "Authorization" => "JWT " + token }
+          expect(response).to have_http_status(:bad_request)
+          expected_response = { 'message' => ['該当のものが存在しません'] }
+          expect(JSON.parse(response.body)).to match(expected_response)
+        end
+      end
+
+      context "company_name が入力されていない時" do
+        let!(:user) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user.id, exp: exp)
+        end
+        let!(:gakutika) do
+          user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+        end
+        let!(:user_and_company) do
+          UserAndCompany.create(user_id: user.id, company_id: company.id)
+        end
+        it 'status bad request を返す' do
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: " ", gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
+          expect(response).to have_http_status(:bad_request)
+          expected_response = { 'message' => ['企業名を入力してください'] }
+          expect(JSON.parse(response.body)).to match(expected_response)
+        end
+      end
+
+      context "company_name が param に存在しない時" do
+        let!(:user) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user.id, exp: exp)
+        end
+        let!(:gakutika) do
+          user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+        end
+        let!(:user_and_company) do
+          UserAndCompany.create(user_id: user.id, company_id: company.id)
+        end
+        it 'status bad request を返す' do
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
+          expect(response).to have_http_status(:bad_request)
+          expected_response = { 'message' => ['企業名を入力してください'] }
+          expect(JSON.parse(response.body)).to match(expected_response)
+        end
+      end
+
     end
   end
 end
