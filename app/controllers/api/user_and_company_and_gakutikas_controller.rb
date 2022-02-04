@@ -12,9 +12,11 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
 
   def create
     @company = Company.find_or_create_by(name: user_and_company_and_gakutika_params[:company_name])
-    # @user_and_company = UserAndCompany.create(company_id: @company.id, user_id: signin_user(request.headers).id)
+    unless @company.save
+      # company_name が空白の時
+      render json: { message: @company.errors.full_messages }, status: :bad_request and return
+    end
     @user_and_company = @company.user_and_companies.find_or_create_by(user_id: signin_user(request.headers).id)
-    puts "ここまで"
     @user_and_company_and_gakutika = @user_and_company.user_and_company_and_gakutikas.build(gakutika_id: @gakutika.id)
 
     if @user_and_company_and_gakutika.save
@@ -39,6 +41,8 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
     end
 
     def correct_user2
+      # gakutika_title が入力されていない時は，学チカのタイトルを入力してくださいにしたいと思ったけど，該当のものが~ でよいか
+      # gakutika_title が存在しない時は，該当のものが存在しません，になる
       @gakutika = Gakutika.find_by!(title: user_and_company_and_gakutika_params[:gakutika_title])
       render json: { message: ['不正な入力です'] }, status: :bad_request unless @gakutika.user.id == signin_user(request.headers).id
     end
