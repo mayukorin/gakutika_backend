@@ -69,7 +69,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it 'status bad request と 不正な入力です メッセージを返す' do
                     post api_gakutikas_path, headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル", content: "内容です", start_month: " ", end_month: "2018-12", tough_rank: "0"} }
                     expect(response).to have_http_status(:bad_request)
-                    expected_response = { 'message' => ['不正な入力です'] }
+                    expected_response = { 'message' => ['開始年月を入力してください'] }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end
@@ -85,7 +85,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it 'status bad request と 不正な入力です メッセージを返す' do
                     post api_gakutikas_path, headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル", content: "内容です",  end_month: "2018-12", tough_rank: "0"} }
                     expect(response).to have_http_status(:bad_request)
-                    expected_response = { 'message' => ['不正な入力です'] }
+                    expected_response = { 'message' => ['開始年月を入力してください'] }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end
@@ -100,9 +100,9 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 end
                 it 'status bad request と 「不正な入力です」 メッセージを返す' do
                     post api_gakutikas_path, headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル", content: "内容です",  start_month: "2018-05", end_month: "2018-12"} }
-                    # expect(response).to have_http_status(:bad_request)
-                    # expected_response = { 'message' => ['不正な入力です'] }
-                    # expect(JSON.parse(response.body)).to match(expected_response)
+                    expect(response).to have_http_status(:bad_request)
+                    expected_response = { 'message' => ['頑張り順は数値で入力してください'] }
+                    expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end
 
