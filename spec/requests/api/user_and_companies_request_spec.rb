@@ -74,6 +74,46 @@ RSpec.describe "Api::UserAndCompanies", type: :request do
       end  
     end
 
+    describe "#create" do
+      context "通常" do
+        let!(:user) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user.id, exp: exp)
+        end
+        it 'status created を返す' do
+          post api_user_and_companies_path, headers: { "Authorization" => "JWT " + token }, params: { user_and_company: { company_name: "abc" } }
+          expect(response).to have_http_status(:created)
+          # expected_response = {"id"=>5, "company"=>{"name"=>"abc"}, "user_and_company_and_gakutikas"=>[]}
+          # expect(JSON.parse(response.body)).to match(expected_response)
+        end
+      end 
+      context "company_name が入力されていない" do
+        let!(:user) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user.id, exp: exp)
+        end
+        it 'status bad request を返す' do
+          post api_user_and_companies_path, headers: { "Authorization" => "JWT " + token }, params: { user_and_company: { company_name: "" } }
+          expect(response).to have_http_status(:bad_request)
+          puts JSON.parse(response.body)
+          expected_response = { 'message' => ['企業名を入力してください'] }
+          expect(JSON.parse(response.body)).to match(expected_response)
+        end
+      end  
+    end
+
   end
 
 end
