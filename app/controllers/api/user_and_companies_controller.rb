@@ -35,6 +35,19 @@ class Api::UserAndCompaniesController < ApplicationController
 
   end
 
+  def create
+    @company = Company.find_or_initialize_by(name: user_and_company_params[:company_name])
+    unless @company.save
+      render json: { message: @company.errors.full_messages }, status: :bad_request and return
+    end
+    @user_and_company = UserAndCompany.new(company_id: @company.id, user_id: signin_user(request.headers).id)
+    if @user_and_company.save
+      render json: @user_and_company, serializer: UserAndCompanySerializer, status: :created
+    else
+      render json: { message: @user_and_company.errors.full_messages }, status: :bad_request
+    end
+  end
+
   private
     def correct_user
       @user_and_company = UserAndCompany.eager_load(:user).find_by!(id: params[:id])
