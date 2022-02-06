@@ -7,6 +7,7 @@ class UserAuthenticator
             @request_headers = request_headers
             payload, = TokenDecryptor.call(token)
             user = User.find(payload['user_id'])
+            return user
         rescue StandardError => e
             nil
         end

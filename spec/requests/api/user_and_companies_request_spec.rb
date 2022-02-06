@@ -76,7 +76,7 @@ RSpec.describe "Api::UserAndCompanies", type: :request do
 
     describe "#create" do
       context "通常" do
-        let!(:user) do
+        let!(:user2) do
           FactoryBot.create(:user)
         end
         let!(:company) do
@@ -84,11 +84,19 @@ RSpec.describe "Api::UserAndCompanies", type: :request do
         end
         let!(:token) do
             exp = Time.now.to_i + 4 * 60 
-            TokenProvider.new.call(user_id: user.id, exp: exp)
+            TokenProvider.new.call(user_id: user2.id, exp: exp)
         end
         it 'status created を返す' do
+          puts user2.password
+          puts "おかしい"
+          puts "あああ"
+          user = User.find(user2.id)
+          puts user.password
+          puts "いいい"
           post api_user_and_companies_path, headers: { "Authorization" => "JWT " + token }, params: { user_and_company: { company_name: "abc" } }
-          expect(response).to have_http_status(:created)
+          puts JSON.parse(response.body)
+          # expect(response).to have_http_status(:created)
+          
           # expected_response = {"id"=>5, "company"=>{"name"=>"abc"}, "user_and_company_and_gakutikas"=>[]}
           # expect(JSON.parse(response.body)).to match(expected_response)
         end

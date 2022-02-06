@@ -36,6 +36,7 @@ class Api::UserAndCompaniesController < ApplicationController
   end
 
   def create
+    
     @company = Company.find_or_initialize_by(name: user_and_company_params[:company_name])
     unless @company.save
       render json: { message: @company.errors.full_messages }, status: :bad_request and return
@@ -46,6 +47,7 @@ class Api::UserAndCompaniesController < ApplicationController
     else
       render json: { message: @user_and_company.errors.full_messages }, status: :bad_request
     end
+   
   end
 
   private

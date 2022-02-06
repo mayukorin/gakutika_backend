@@ -58,15 +58,8 @@ class Api::QuestionsController < ApplicationController
     
     def set_company
       
-      company_name = question_params[:company_name]
-      if company_name.to_s == '' and !@question.nil? 
-        company_name = @question.company.name
-      end
-
-      gakutika_id = question_params[:gakutika_id]
-      if gakutika_id.to_s == '' and !@question.nil? 
-        gakutika_id = @question.gakutika.id
-      end
+      company_name = question_params[:company_name].to_s == '' ? @question&.company&.name : question_params[:company_name]
+      gakutika_id = question_params[:gakutika_id].to_s == '' ? @question&.gakutika&.id : question_params[:gakutika_id]
       
       @company = Company.find_or_initialize_by(name: company_name)
       unless @company.save

@@ -152,6 +152,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         end
         it 'もともとその企業でその学チカを話す予定です を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name, gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
+          puts UserAndCompanyAndGakutika.all.count
           expect(response).to have_http_status(:bad_request)
           expected_response = { 'message' => ['もともとその企業でその学チカを話す予定です'] }
           expect(JSON.parse(response.body)).to match(expected_response)
