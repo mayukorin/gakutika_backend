@@ -5,9 +5,7 @@ class Api::UserAndCompaniesController < ApplicationController
   before_action :correct_user, only: [:destroy, :update]
 
   def destroy
-    puts @user_and_company.user.name
-    puts @user_and_company.company.name
-    # Question.destroy_by(user: @user_and_company.user.id, company: @user_and_company.company.id)
+   
     questions = Question.where(company: @user_and_company.company.id)
     questions.each do |q|
       # puts question_id
@@ -25,7 +23,7 @@ class Api::UserAndCompaniesController < ApplicationController
     unless @company.save
       render json: { message: @company.errors.full_messages }, status: :bad_request and return
     end
-    questions = Question.where(company: @user_and_company.company.id)
+    questions = Question.where(company_id: @user_and_company.company.id)
     questions.each do |q|
       q.update(company_id: @company.id) if q.user.id == @user_and_company.user.id
     end

@@ -26,10 +26,10 @@ ja:
       company:
         name: 企業名
       user_and_company:
-        company: 企業名
+        company_id: 企業名
       user_and_company_and_gakutika:
-        user_and_company: 企業
-        gakutika: 学チカ
+        user_and_company_id: 企業
+        gakutika_id: 学チカ
   
     errors:
       models:
@@ -48,7 +48,7 @@ ja:
 
         user_and_company_and_gakutika:
           attributes:
-            user_and_company:
+            user_and_company_id:
               format: '%{message}'
               taken: 'もともとその%{attribute}でその学チカを話す予定です'
 

@@ -5,7 +5,7 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
   before_action :correct_user, only: [:destroy]
   before_action :correct_user2, only: [:create]
   def destroy
-    Question.destroy_by(gakutika: @user_and_company_and_gakutika.gakutika.id, company: @user_and_company_and_gakutika.company.id)
+    Question.destroy_by(gakutika_id: @user_and_company_and_gakutika.gakutika.id, company_id: @user_and_company_and_gakutika.company.id)
     @user_and_company_and_gakutika.destroy
     render status: :no_content
   end

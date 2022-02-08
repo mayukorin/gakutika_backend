@@ -3,5 +3,5 @@ class UserAndCompanyAndGakutika < ApplicationRecord
   belongs_to :gakutika
   has_one :company, through: :user_and_company
   has_one :user, through: :user_and_company
-  validates :user_and_company, uniqueness: { scope: :gakutika}
+  validates :user_and_company_id, uniqueness: { scope: :gakutika}
 end
