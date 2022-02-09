@@ -5,5 +5,6 @@ class Company < ApplicationRecord
             find_by(user_id: user_id)
         end
     end
+    has_many :users, through: :user_and_companies
     validates :name, presence: true
 end

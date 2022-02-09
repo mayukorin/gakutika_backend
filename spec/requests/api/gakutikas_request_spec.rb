@@ -50,24 +50,11 @@ RSpec.describe "Api::Gakutikas", type: :request do
                     expect(response).to have_http_status(:created)
                     user_gakutika_cnt = user.gakutikas.count
                     expect(user_gakutika_cnt).to match(1)
+                    # puts JSON.parse(response.body)
+                    # puts "-----------"
                     new_gakutika = user.gakutikas.first
-                    expected_response = { 'content' => '内容です', 'endMonth' => '2018-12', 'id' => new_gakutika.id, 'startMonth' => '2018-11', 'title' => 'タイトル', 'toughRank' => user_gakutika_cnt }
+                    expected_response = { 'content' => '内容です', 'endMonth' => '2018-12', 'id' => new_gakutika.id, 'questions' => [], 'startMonth' => '2018-11', 'title' => 'タイトル', 'toughRank' => user_gakutika_cnt, 'user_and_companies' => [] }
                     expect(JSON.parse(response.body)).to match(expected_response)
-                end
-            end
-
-            context "通常の学チカを登録する場合" do
-                let!(:user) do
-                    FactoryBot.create(:user)
-                end
-                let!(:token) do
-                    exp = Time.now.to_i + 4 * 60
-                    TokenProvider.new.call(user_id: user.id, exp: exp)
-                end
-                it 'status created と 作成した学チカを返す2' do
-                    post api_gakutikas_path, headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: " ", content: " ", start_month: "2018-11", end_month: "2018-12", tough_rank: "0"} }
-                    puts ("2です")
-                    puts (JSON.parse(response.body))
                 end
             end
 
@@ -82,7 +69,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it 'status bad request と 不正な入力です メッセージを返す' do
                     post api_gakutikas_path, headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル", content: "内容です", start_month: " ", end_month: "2018-12", tough_rank: "0"} }
                     expect(response).to have_http_status(:bad_request)
-                    expected_response = { 'message' => ['不正な入力です'] }
+                    expected_response = { 'message' => ['開始年月を入力してください'] }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end
@@ -98,7 +85,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it 'status bad request と 不正な入力です メッセージを返す' do
                     post api_gakutikas_path, headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル", content: "内容です",  end_month: "2018-12", tough_rank: "0"} }
                     expect(response).to have_http_status(:bad_request)
-                    expected_response = { 'message' => ['不正な入力です'] }
+                    expected_response = { 'message' => ['開始年月を入力してください'] }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end
@@ -113,9 +100,9 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 end
                 it 'status bad request と 「不正な入力です」 メッセージを返す' do
                     post api_gakutikas_path, headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル", content: "内容です",  start_month: "2018-05", end_month: "2018-12"} }
-                    # expect(response).to have_http_status(:bad_request)
-                    # expected_response = { 'message' => ['不正な入力です'] }
-                    # expect(JSON.parse(response.body)).to match(expected_response)
+                    expect(response).to have_http_status(:bad_request)
+                    expected_response = { 'message' => ['頑張り順は数値で入力してください'] }
+                    expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end
 
@@ -145,7 +132,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it 'status ok と該当の学チカを返す' do
                     get api_gakutika_path(id: gakutika.id), headers: { "Authorization" => "JWT " + token }
                     expect(response).to have_http_status(:ok)
-                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2017-10', 'id' => gakutika.id, 'questions' => [], 'startMonth' => '2017-09', 'title' => 'aaaaaa', 'toughRank' => 1 }
+                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2017-10', 'id' => gakutika.id, 'questions' => [], 'startMonth' => '2017-09', 'title' => 'aaaaaa', 'toughRank' => 1, 'user_and_companies' => []}
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end
@@ -207,7 +194,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it "status accepted と更新した学チカの情報を返す" do
                     patch api_gakutika_path(gakutika.id), headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル", content: "内容です", start_month: "2018-09", end_month: "2018-12", tough_rank: "1"} }
                     expect(response).to have_http_status(:accepted)
-                    expected_response = { 'content' => '内容です', 'endMonth' => '2018-12', 'id' => gakutika.id, 'startMonth' => '2018-09', 'title' => 'タイトル', 'toughRank' => 1 }
+                    expected_response = { 'content' => '内容です', 'endMonth' => '2018-12', 'id' => gakutika.id, 'questions' => [], 'startMonth' => '2018-09', 'title' => 'タイトル', 'toughRank' => 1, 'user_and_companies' => [] }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
 
@@ -224,10 +211,50 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 let!(:gakutika) do
                     user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
                 end
-                it "status bad request と 不正な入力です メッセージを返す" do
+                it "status accpeted を返す" do
                     patch api_gakutika_path(gakutika.id), headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル",  content: "bbbbbbbbbbbbbb", end_month: "2018-12", tough_rank: "1"} }
+                    expect(response).to have_http_status(:accepted)
+                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2018-12', 'id' => gakutika.id, 'questions' => [], 'startMonth' => '2017-09', 'title' => 'タイトル', 'toughRank' => 1, 'user_and_companies' => [] }
+                    expect(JSON.parse(response.body)).to match(expected_response)
+                end
+
+            end
+
+            context "updateしたい学チカが存在して，start month が入力されていない場合" do
+                let!(:user) do
+                    FactoryBot.create(:user)
+                end
+                let!(:token) do
+                    exp = Time.now.to_i + 4 * 60
+                    TokenProvider.new.call(user_id: user.id, exp: exp)
+                end
+                let!(:gakutika) do
+                    user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+                end
+                it "status accpeted を返す" do
+                    patch api_gakutika_path(gakutika.id), headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル",  content: "bbbbbbbbbbbbbb", start_month: "", end_month: "2018-12", tough_rank: "1"} }
                     expect(response).to have_http_status(:bad_request)
-                    expected_response = { 'message' => ['不正な入力です'] }
+                    expected_response = { 'message' => ['開始年月を入力してください'] }
+                    expect(JSON.parse(response.body)).to match(expected_response)
+                end
+
+            end
+
+            context "updateしたい学チカが存在して，tough rank が params に存在しない場合" do
+                let!(:user) do
+                    FactoryBot.create(:user)
+                end
+                let!(:token) do
+                    exp = Time.now.to_i + 4 * 60
+                    TokenProvider.new.call(user_id: user.id, exp: exp)
+                end
+                let!(:gakutika) do
+                    user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 2, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+                end
+                it "status accpeted を返す" do
+                    patch api_gakutika_path(gakutika.id), headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル",  content: "bbbbbbbbbbbbbb", start_month: "2018-09",  end_month: "2018-12"} }
+                    expect(response).to have_http_status(:accepted)
+                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2018-12', 'id' => gakutika.id, 'questions' => [], 'startMonth' => '2018-09', 'title' => 'タイトル', 'toughRank' => 2, 'user_and_companies' => [] }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
 

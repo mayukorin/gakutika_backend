@@ -3,8 +3,8 @@ class Api::QuestionsController < ApplicationController
   include SigninUser
   include ExceptionHandler
 
-  before_action :set_company, only: [:create, :update]
   before_action :is_question_of_user, only: [:update, :destroy]
+  before_action :set_company, only: [:create, :update]
 
   def create
    
@@ -18,10 +18,11 @@ class Api::QuestionsController < ApplicationController
     @question = Question.new(question_params_for_save)
 
     if @question.save 
-      @user_and_company_and_gakutika = UserAndCompanyAndGakutika.find_or_initialize_by(user_and_company_id: @user_and_company.id, gakutika_id: @question.gakutika_id)
-      @user_and_company_and_gakutika.save
+      # @user_and_company_and_gakutika = UserAndCompanyAndGakutika.find_or_initialize_by(user_and_company_id: @user_and_company.id, gakutika_id: @question.gakutika_id)
+      # @user_and_company_and_gakutika.save
       render json: @question, serializer: QuestionSerializer, status: :created
     else
+      @company.destroy # user_and_company も，user_and_company_and_gakutikasも全部消される
       render json: { message: @question.errors.full_messages }, status: :bad_request
     end
   end
@@ -33,10 +34,16 @@ class Api::QuestionsController < ApplicationController
       render json: { message: @company.errors.full_messages }, status: :bad_request and return
     end
     '''
+    if @company.name != @question.company.name
+      new_company_flag = true
+    end
 
     if @question.update(question_params_for_save)
       render json: @question, serializer: QuestionSerializer, status: :accepted
     else
+      if new_company_flag # 新しい company を作ろうとしていたら
+        @company.destroy 
+      end
       render json: { message: @question.errors.full_messages }, status: :bad_request
     end
   end
@@ -50,18 +57,33 @@ class Api::QuestionsController < ApplicationController
   private
     
     def set_company
-      @company = Company.find_or_initialize_by(name: question_params[:company_name])
+      
+      company_name = question_params[:company_name].to_s == '' ? @question&.company&.name : question_params[:company_name]
+      gakutika_id = question_params[:gakutika_id].to_s == '' ? @question&.gakutika&.id : question_params[:gakutika_id]
+      
+      @company = Company.find_or_initialize_by(name: company_name)
       unless @company.save
         render json: { message: @company.errors.full_messages }, status: :bad_request and return
       end
       @user_and_company = UserAndCompany.find_or_initialize_by(company_id: @company.id, user_id: signin_user(request.headers).id)
-      @user_and_company.save
+      unless @user_and_company.save
+        @company.destroy
+        render json: { message: @user_and_company.errors.full_messages }, status: :bad_request and return
+      end
+      @user_and_company_and_gakutika = UserAndCompanyAndGakutika.find_or_initialize_by(user_and_company_id: @user_and_company.id, gakutika_id: question_params[:gakutika_id])
+      unless @user_and_company_and_gakutika.save
+        @company.destroy
+        render json: { message: @user_and_company_and_gakutika.errors.full_messages }, status: :bad_request and return
+      end
     end
 
     def question_params_for_save
       question_params_for_save = question_params.to_h
-      question_params_for_save[:day] = Date.strptime(question_params[:day], '%Y-%m-%d')
+      # ここで error になると，company が消されない
+      # puts question_params[:day]
+      # question_params_for_save[:day] = Date.strptime(question_params[:day], '%Y-%m-%d')
       question_params_for_save.delete(:company_name)
+     
       question_params_for_save[:company_id] = @company.id
       return question_params_for_save
     end

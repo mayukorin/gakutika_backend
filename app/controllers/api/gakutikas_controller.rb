@@ -25,7 +25,7 @@ class Api::GakutikasController < ApplicationController
         if @gakutika.save 
             render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :created
         else
-            render json: @gakutika.errors.full_messages, status: :bad_request
+            render json: { message: @gakutika.errors.full_messages }, status: :bad_request
         end
     end
 
@@ -38,7 +38,7 @@ class Api::GakutikasController < ApplicationController
         if @gakutika.update(gakutika_params_for_save) 
             render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :accepted
         else
-            render json: @gakutika.errors.full_messages, status: :bad_request
+            render json: { message: @gakutika.errors.full_messages }, status: :bad_request
         end
     end
 
@@ -59,9 +59,10 @@ class Api::GakutikasController < ApplicationController
         end
         def gakutika_params_for_save
             gakutika_params_for_save = gakutika_params.to_h
-            gakutika_params_for_save[:start_month] = Date.strptime(gakutika_params[:start_month], '%Y-%m')
-            gakutika_params_for_save[:end_month] = Date.strptime(gakutika_params[:end_month], '%Y-%m')
-            gakutika_params_for_save[:tough_rank] = signin_user(request.headers).gakutikas.count + 1 if gakutika_params_for_save[:tough_rank] == "0"
+            gakutika_params_for_save[:start_month] = gakutika_params[:start_month] + "-1" unless gakutika_params[:start_month].nil?
+            gakutika_params_for_save[:end_month] = gakutika_params[:end_month] + "-1" unless gakutika_params[:end_month].nil?
+            gakutika_params_for_save[:tough_rank] = signin_user(request.headers).gakutikas.count + 1 if gakutika_params_for_save[:tough_rank] == "0" and @gakutika.nil? # update ではない時
+            
             return gakutika_params_for_save
         end
         def gakutika_params

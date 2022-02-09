@@ -5,7 +5,8 @@ ja:
       gakutika: 学チカ
       question: 質問
       company: 企業
-    attributes:
+      user_and_company_and_gakutika: 企業と学チカとユーザー
+    attributes: 
       user:
         name: 名前
         email: メールアドレス
@@ -24,7 +25,12 @@ ja:
         day: 日付け
       company:
         name: 企業名
-
+      user_and_company:
+        company_id: 企業名
+      user_and_company_and_gakutika:
+        user_and_company_id: 企業
+        gakutika_id: 学チカ
+  
     errors:
       models:
         user:
@@ -33,12 +39,18 @@ ja:
               # format: '%{message}'
               # uniqueness: この%{attribute}は既に使われています
               taken: は既に使われています
-              invalid: 'は正しい形式で入力してください'
+              invalid: は正しい形式で入力してください
         gakutika:
           attributes:
             tough_rank:
               # format: '%{message}'
               taken: は既に存在します
+
+        user_and_company_and_gakutika:
+          attributes:
+            user_and_company_id:
+              format: '%{message}'
+              taken: 'もともとその%{attribute}でその学チカを話す予定です'
 
       
         
