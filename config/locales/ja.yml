@@ -21,6 +21,7 @@ ja:
         query: 質問内容
         answer: 解答
         gakutika: 学チカ
+        gakutika_id: 学チカ
         company: 企業
         day: 日付け
       company:
@@ -30,6 +31,7 @@ ja:
       user_and_company_and_gakutika:
         user_and_company_id: 企業
         gakutika_id: 学チカ
+        gakutika: 学チカ
   
     errors:
       models:
