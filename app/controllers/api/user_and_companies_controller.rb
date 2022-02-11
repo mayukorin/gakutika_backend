@@ -19,7 +19,7 @@ class Api::UserAndCompaniesController < ApplicationController
   end
 
   def update
-
+    '''
     @user_and_company = find_user_and_company(params[:id])
     @company = Company.find_or_initialize_by(name: user_and_company_params[:company_name])
     unless @company.save
@@ -32,11 +32,19 @@ class Api::UserAndCompaniesController < ApplicationController
     @user_and_company.update(company_id: @company.id)
     puts @user_and_company.company.name
     render status: :accepted
-
+    '''
+    @user_and_company = find_user_and_company(params[:id])
+    @company = Company.find_or_create_by!(name: user_and_company_params[:company_name])
+    questions = Question.where(company_id: @user_and_company.company.id)
+    questions.each do |q|
+      q.update(company_id: @company.id) if q.user.id == @user_and_company.user.id
+    end
+    @company.user_and_companies << @user_and_company
+    render status: :accepted
   end
 
   def create
-    
+    '''
     @company = Company.find_or_initialize_by(name: user_and_company_params[:company_name])
     unless @company.save
       render json: { message: @company.errors.full_messages }, status: :bad_request and return
@@ -47,7 +55,11 @@ class Api::UserAndCompaniesController < ApplicationController
     else
       render json: { message: @user_and_company.errors.full_messages }, status: :bad_request
     end
-   
+    '''
+    @user_and_company = UserAndCompany.create!(user_id: signin_user(request.headers).id)
+    @company = Company.find_or_create_by!(name: user_and_company_params[:company_name])
+    @company.user_and_companies << @user_and_company
+    render json: @user_and_company, serializer: UserAndCompanySerializer, status: :created
   end
 
   private
