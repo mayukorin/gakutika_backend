@@ -6,5 +6,5 @@ class Company < ApplicationRecord
         end
     end
     has_many :users, through: :user_and_companies
-    validates :name, presence: true
+    validates :name, presence: true, uniqueness: { case_sensitive: true }
 end
