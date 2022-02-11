@@ -12,20 +12,15 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
   end
 
   def create
-    @gakutika = find_gakutika(user_and_company_and_gakutika_params[:gakutika_title])
-    @company = Company.find_or_create_by(name: user_and_company_and_gakutika_params[:company_name])
-    unless @company.save
-      # company_name が空白の時
-      render json: { message: @company.errors.full_messages }, status: :bad_request and return
-    end
-    @user_and_company = @company.user_and_companies.find_or_create_by(user_id: signin_user(request.headers).id)
-    @user_and_company_and_gakutika = @user_and_company.user_and_company_and_gakutikas.build(gakutika_id: @gakutika.id)
+    
+    @user_and_company = UserAndCompany.find_or_create_by!(user_id: signin_user(request.headers).id)
+    @company = Company.find_or_create_by!(name: user_and_company_and_gakutika_params[:company_name])
+    @company.user_and_companies << @user_and_company
 
-    if @user_and_company_and_gakutika.save
-      render json: @user_and_company_and_gakutika, serializer: UserAndCompanyAndGakutikaSerializer, status: :created
-    else
-      render json: { message: @user_and_company_and_gakutika.errors.full_messages }, status: :bad_request
-    end
+    @gakutika = find_gakutika(user_and_company_and_gakutika_params[:gakutika_title])
+    @user_and_company_and_gakutika = UserAndCompanyAndGakutika.create!(gakutika_id: @gakutika.id, user_and_company_id: @user_and_company.id)
+
+    render json: @user_and_company_and_gakutika, serializer: UserAndCompanyAndGakutikaSerializer, status: :created
 
     
   end
