@@ -11,6 +11,9 @@ RSpec.describe "Api::Questions", type: :request do
             exp = Time.now.to_i + 4 * 60 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
+        let!(:c) do
+          Company.create(name: "あいう")
+        end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
@@ -28,6 +31,8 @@ RSpec.describe "Api::Questions", type: :request do
           user_and_company = UserAndCompany.find_by(user_id: user.id, company_id: new_question.company.id)
           user_and_company_and_gakutika_cnt = UserAndCompanyAndGakutika.where(user_and_company: user_and_company.id, gakutika: new_question.gakutika.id).count
           expect(user_and_company_and_gakutika_cnt).to match(1)
+          company_cnt = Company.all.count()
+          expect(company_cnt).to match(1)
         end
       end
 
