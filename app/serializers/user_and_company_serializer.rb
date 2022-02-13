@@ -2,6 +2,7 @@ class UserAndCompanySerializer < ActiveModel::Serializer
     attribute :id
     belongs_to :company
     has_many :user_and_company_and_gakutikas
+    attribute :user_and_company_and_particular_gakutika
     '''
     def company
         CompanySerializer.new(object.company)
@@ -11,4 +12,10 @@ class UserAndCompanySerializer < ActiveModel::Serializer
         UserAndCompanyAndGakutikaSerializer.new(object.user_and_company_and_gakutikas.first)
     end
     '''
+
+    def user_and_company_and_particular_gakutika
+        unless @instance_options[:gakutika_id].nil?
+            object.user_and_company_and_gakutikas.find_by(gakutika_id: @instance_options[:gakutika_id])
+        end
+    end
 end

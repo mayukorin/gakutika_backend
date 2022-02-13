@@ -5,7 +5,7 @@ class GakutikaSerializer < ActiveModel::Serializer
     attributes :endMonth
     has_many :questions, serializer: QuestionSerializer # , if: -> { show_gakutika_detail }
     # has_many :user_and_company_and_gakutikas, serializer: UserAndCompanyAndGakutikaSerializer, if: -> { show_gakutika_detail }
-    has_many :user_and_companies, serializer: UserAndCompanySerializer
+    has_many :user_and_companies, serializer: UserAndCompanySerializer, gakutika_id: :gakutika_id
     # has_many :companies, serializer: CompanySerializer, if: -> { show_gakutika_detail }
 
 
@@ -19,6 +19,10 @@ class GakutikaSerializer < ActiveModel::Serializer
 
     def show_gakutika_detail
       @instance_options[:show_gakutika_detail_flag] == true
+    end
+
+    def gakutika_id
+      object.id
     end
     '''
     def questions
