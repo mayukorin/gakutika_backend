@@ -13,10 +13,11 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
 
   def create
     
-    @user_and_company = UserAndCompany.find_or_create_by!(user_id: signin_user(request.headers).id)
-    @company = Company.find_or_create_by!(name: user_and_company_and_gakutika_params[:company_name])
-    @company.user_and_companies << @user_and_company
-
+    # @user_and_company = UserAndCompany.find_or_create_by!(user_id: signin_user(request.headers).id)
+    # @company = Company.find_or_create_by!(name: user_and_company_and_gakutika_params[:company_name])
+    @company = Company.find_by!(name: user_and_company_and_gakutika_params[:company_name])
+    # @company.user_and_companies << @user_and_company
+    @user_and_company = UserAndCompany.find_by!(user_id: signin_user(request.headers).id, company_id: @company.id)
     @gakutika = find_gakutika(user_and_company_and_gakutika_params[:gakutika_title])
     @user_and_company_and_gakutika = UserAndCompanyAndGakutika.create!(gakutika_id: @gakutika.id, user_and_company_id: @user_and_company.id)
 

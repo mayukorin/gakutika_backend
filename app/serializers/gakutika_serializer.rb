@@ -21,9 +21,6 @@ class GakutikaSerializer < ActiveModel::Serializer
       @instance_options[:show_gakutika_detail_flag] == true
     end
 
-    def gakutika_id
-      object.id
-    end
     '''
     def questions
       object.questions 
