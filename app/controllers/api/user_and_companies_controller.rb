@@ -56,9 +56,8 @@ class Api::UserAndCompaniesController < ApplicationController
       render json: { message: @user_and_company.errors.full_messages }, status: :bad_request
     end
     '''
-    @user_and_company = UserAndCompany.create!(user_id: signin_user(request.headers).id)
     @company = Company.find_or_create_by!(name: user_and_company_params[:company_name])
-    @company.user_and_companies << @user_and_company
+    @user_and_company = UserAndCompany.find_or_create_by!(user_id: signin_user(request.headers).id, company_id: @company.id)
     render json: @user_and_company, serializer: UserAndCompanySerializer, status: :created
   end
 
