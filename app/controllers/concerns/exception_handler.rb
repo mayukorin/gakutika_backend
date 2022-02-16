@@ -10,6 +10,7 @@ included do
     rescue_from  ActionController::ParameterMissing, with: :invalid_input
     # rescue_from ActiveRecord::InvalidForeignKey, with: :invalid_input
     rescue_from ActiveRecord::RecordNotFound, with: :object_not_found
+    rescue_from ActiveRecord::RecordInvalid, with: :validation_error
     # rescue_from ActionController::UrlGenerationError, with: :object_not_found
 end
 
@@ -28,6 +29,10 @@ end
 def object_not_found(e)
     puts e
     render json: { message: ['該当のものが存在しません']}, status: :bad_request
+end
+
+def validation_error(e)
+    render json: { message: e.record.errors.full_messages }, status: :bad_request
 end
 
 end

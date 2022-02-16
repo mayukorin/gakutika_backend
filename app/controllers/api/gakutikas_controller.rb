@@ -30,7 +30,7 @@ class Api::GakutikasController < ApplicationController
     end
 
     def show
-        render json: @gakutika, serializer: GakutikaSerializer, include: [:questions, user_and_companies: [:company, user_and_company_and_gakutikas: :gakutika ]], show_gakutika_detail_flag: true, user_id: signin_user(request.headers).id, status: :ok
+        render json: @gakutika, serializer: GakutikaSerializer, include: [:questions, user_and_companies: [:company, user_and_company_and_gakutikas: :gakutika ]], show_gakutika_detail_flag: true, user_id: signin_user(request.headers).id, gakutika_id: @gakutika.id, status: :ok
     end
 
     def update
