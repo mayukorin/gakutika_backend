@@ -51,9 +51,6 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
-        let!(:user_and_company) do
-          UserAndCompany.create(company_id: company.id, user_id: user.id)
-        end
         it 'status created を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:created)
@@ -128,12 +125,12 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
         
-        it 'status bad request を返す' do
+        it 'status created を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name, gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           # expect(UserAndCompany.count).to match(1)
-          expect(response).to have_http_status(:bad_request)
-          expected_response = { 'message' => ['該当のものが存在しません'] }
-          expect(JSON.parse(response.body)).to match(expected_response)
+          expect(response).to have_http_status(:created)
+          # expected_response = { 'message' => ['該当のものが存在しません'] }
+          # expect(JSON.parse(response.body)).to match(expected_response)
         end
 
       end
@@ -181,9 +178,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         let!(:gakutika) do
           user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
-        let!(:user_and_company) do
-          UserAndCompany.create(user_id: user.id, company_id: company.id)
-        end
+        
         it 'status bad request を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name, gakutika_title: " " }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
@@ -206,9 +201,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         let!(:gakutika) do
           user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
-        let!(:user_and_company) do
-          UserAndCompany.create(user_id: user.id, company_id: company.id)
-        end
+        
         it 'status bad request を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name}}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
@@ -237,7 +230,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         it 'status bad request を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: " ", gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
-          expected_response = { 'message' => ['該当のものが存在しません'] }
+          expected_response = { 'message' => ['企業名を入力してください'] }
           expect(JSON.parse(response.body)).to match(expected_response)
         end
       end
@@ -262,7 +255,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         it 'status bad request を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
-          expected_response = { 'message' => ['該当のものが存在しません'] }
+          expected_response = { 'message' => ['企業名を入力してください'] }
           expect(JSON.parse(response.body)).to match(expected_response)
         end
       end
