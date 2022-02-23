@@ -27,7 +27,7 @@ ja:
       company:
         name: 企業名
       user_and_company:
-        company_id: 企業名
+        company_id: 企業
       user_and_company_and_gakutika:
         user_and_company_id: 企業
         gakutika_id: 学チカ
@@ -51,6 +51,12 @@ ja:
         user_and_company_and_gakutika:
           attributes:
             user_and_company_id:
+              format: '%{message}'
+              taken: 'もともとその%{attribute}でその学チカを話す予定です'
+
+        user_and_company:
+          attributes:
+            company_id:
               format: '%{message}'
               taken: 'もともとその%{attribute}でその学チカを話す予定です'
 
