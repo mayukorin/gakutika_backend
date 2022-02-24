@@ -18,6 +18,11 @@ class Api::UserAndCompaniesController < ApplicationController
     render status: :no_content
   end
 
+  def index
+    @user_and_companies = UserAndCompany.where(user_id: signin_user(request.headers).id)
+    render json: @user_and_companies, each_serializer: UserAndCompanySerializer, include: [:company, user_and_company_and_gakutikas: :gakutika], show_gakutika_detail_flag: true, status: :ok
+  end
+
   def update
     '''
     @user_and_company = find_user_and_company(params[:id])

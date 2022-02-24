@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     resources :questions, only: [:create, :update, :destroy]
     resources :companies, only: [:index]
     resources :user_and_company_and_gakutikas, only: [:destroy, :create,]
-    resources :user_and_companies, only: [:destroy, :update, :create]
+    resources :user_and_companies, only: [:destroy, :update, :create, :index]
     post '/update-tough-rank', to: 'gakutikas#update_tough_rank'
     post '/signin', to: 'sessions#create'
     get '/me', to: 'sessions#me'
