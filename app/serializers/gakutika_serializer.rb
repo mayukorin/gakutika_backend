@@ -7,6 +7,7 @@ class GakutikaSerializer < ActiveModel::Serializer
     # has_many :user_and_company_and_gakutikas, serializer: UserAndCompanyAndGakutikaSerializer, if: -> { show_gakutika_detail }
     has_many :user_and_companies, serializer: UserAndCompanySerializer, gakutika_id: :gakutika_id
     # has_many :companies, serializer: CompanySerializer, if: -> { show_gakutika_detail }
+    # attribute :particular_user_and_company_and_gakutikas
 
 
     def startMonth
@@ -26,6 +27,19 @@ class GakutikaSerializer < ActiveModel::Serializer
       object.questions 
     end
     '''
+
+    def particular_user_and_company_and_gakutikas
+      puts "trial"
+      unless @instance_options[:user_id].nil?
+        puts "ok"
+        puts object.user_and_company_and_gakutikas
+        puts "abc"
+        object.user_and_company_and_gakutikas.eager_load(:user_and_company) # できない... joinで怒られる，eager_load だといける
+        puts "cba"
+        object.user_and_company_and_gakutikas.eager_load(:user_and_company).where(user_and_companies: {user: @instance_options[:user_id]})
+      end
+      
+    end
 
     
 

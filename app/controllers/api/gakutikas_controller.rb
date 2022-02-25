@@ -70,7 +70,10 @@ class Api::GakutikasController < ApplicationController
         end
         def is_gakutika_of_user
             # @gakutika = signin_user(request.headers).gakutikas.eager_load(companies: :user_and_companies, questions: :company, user_and_company_and_gakutikas: :company).find_by(id: params[:id])
-            @gakutika = signin_user(request.headers).gakutikas.eager_load(user_and_companies: [:company, user_and_company_and_gakutikas: :gakutika], questions: :company).find_by(id: params[:id])
+            # @gakutika = signin_user(request.headers).gakutikas.eager_load(:user_and_company_and_gakutikas, user_and_companies: [:company, user_and_company_and_gakutikas: :gakutika], questions: :company).find_by(id: params[:id])
+            # @gakutika = signin_user(request.headers).gakutikas.eager_loading
+            
+            @gakutika = signin_user(request.headers).gakutikas.eager_loading.find_by(id: params[:id])
             render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request if @gakutika.nil?
         end
         def is_gakutikas_of_user
