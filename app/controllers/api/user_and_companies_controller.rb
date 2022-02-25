@@ -19,7 +19,8 @@ class Api::UserAndCompaniesController < ApplicationController
   end
 
   def index
-    @user_and_companies = UserAndCompany.where(user_id: signin_user(request.headers).id)
+    # @user_and_companies = UserAndCompany.includes(:company, :user_and_company_and_gakutikas).where(user_id: signin_user(request.headers).id)
+    @user_and_companies = UserAndCompany.pre_loading.where(user_id: signin_user(request.headers).id)
     render json: @user_and_companies, each_serializer: UserAndCompanySerializer, include: [:company, user_and_company_and_gakutikas: :gakutika], show_gakutika_detail_flag: true, status: :ok
   end
 

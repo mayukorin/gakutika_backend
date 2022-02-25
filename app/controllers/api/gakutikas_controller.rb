@@ -7,7 +7,7 @@ class Api::GakutikasController < ApplicationController
     before_action :is_gakutikas_of_user, only: [:update_tough_rank]
 
     def index
-        @gakutikas = Gakutika.where(user_id: signin_user(request.headers).id)
+        @gakutikas = Gakutika.eager_loading.where(user_id: signin_user(request.headers).id)
         render json: @gakutikas, each_serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :ok
     end
     def update_tough_rank
