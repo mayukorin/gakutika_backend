@@ -26,6 +26,7 @@ class Api::QuestionsController < ApplicationController
     @company.questions << @question
     @user_and_company = find_or_create_user_and_company(@company.id)
     @user_and_company_and_gakutika = find_or_create_user_and_company_and_gakutika(@user_and_company.id, question_params[:gakutika_id])
+    @user_and_company_and_gakutika.questions << @question
 
     render json: @question, serializer: QuestionSerializer, status: :created
 
@@ -63,6 +64,7 @@ class Api::QuestionsController < ApplicationController
     @company.questions << @question
     @user_and_company = find_or_create_user_and_company(@company.id)
     @user_and_company_and_gakutika = find_or_create_user_and_company_and_gakutika(@user_and_company.id, gakutika_id)
+    @user_and_company_and_gakutika.questions << @question
     
     render json: @question, serializer: QuestionSerializer, status: :accepted
   end
