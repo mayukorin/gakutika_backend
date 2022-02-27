@@ -1,11 +1,11 @@
 class GakutikaSerializer < ActiveModel::Serializer
     attributes :id, :title, :content
     attribute :tough_rank, key: :toughRank
-    attributes :startMonth
-    attributes :endMonth
-    has_many :questions, serializer: QuestionSerializer # , if: -> { show_gakutika_detail }
+    attribute :startMonth
+    attribute :endMonth
+    has_many :questions, serializer: QuestionSerializer, if: :show_gakutika_detail
     # has_many :user_and_company_and_gakutikas, serializer: UserAndCompanyAndGakutikaSerializer, if: -> { show_gakutika_detail }
-    has_many :user_and_companies, serializer: UserAndCompanySerializer, gakutika_id: :gakutika_id
+    has_many :user_and_companies, serializer: UserAndCompanySerializer, gakutika_id: :gakutika_id, if: :show_gakutika_detail
     # has_many :user_and_company_and_gakutikas, serializer: UserAndCompanyAndGakutikaSerializer
     # has_many :companies, serializer: CompanySerializer, if: -> { show_gakutika_detail }
     # attribute :particular_user_and_company_and_gakutikas
@@ -24,11 +24,6 @@ class GakutikaSerializer < ActiveModel::Serializer
     end
 
     '''
-    def questions
-      object.questions 
-    end
-    '''
-
     def particular_user_and_company_and_gakutikas
       puts "trial"
       unless @instance_options[:user_id].nil?
@@ -41,6 +36,7 @@ class GakutikaSerializer < ActiveModel::Serializer
       end
       
     end
+    '''
 
     
 
