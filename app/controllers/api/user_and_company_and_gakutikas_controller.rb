@@ -2,11 +2,10 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
   include Service
   include SigninUser
   include ExceptionHandler 
-  before_action :correct_user, only: [:destroy]
-  before_action :correct_user2, only: [:create]
+  before_action :is_user_and_company_and_gakutika_of_signin_user, only: [:destroy]
+  before_action :is_gakutika_of_signin_user, only: [:create]
   def destroy
     @user_and_company_and_gakutika = find_user_and_company_and_gakutika(params[:id])
-    Question.destroy_by(gakutika_id: @user_and_company_and_gakutika.gakutika.id, company_id: @user_and_company_and_gakutika.company.id)
     @user_and_company_and_gakutika.destroy
     render status: :no_content
   end

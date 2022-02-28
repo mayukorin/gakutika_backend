@@ -68,7 +68,7 @@ class Api::UserAndCompaniesController < ApplicationController
   end
 
   private
-    def correct_user
+    def is_user_and_company_of_signin_user
       user_and_company = UserAndCompany.eager_load(:user).find_by!(id: params[:id])
       render json: { message: ['該当する企業が存在しません'] }, status: :bad_request unless user_and_company.user.id == signin_user(request.headers).id
     end
