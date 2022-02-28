@@ -1,7 +1,7 @@
 class UserAndCompanySerializer < ActiveModel::Serializer
     attribute :id
     belongs_to :company
-    has_many :user_and_company_and_gakutikas
+    has_many :user_and_company_and_gakutikas, show_question_flag: false
     attribute :user_and_company_and_particular_gakutika
     '''
     def company
@@ -19,8 +19,7 @@ class UserAndCompanySerializer < ActiveModel::Serializer
            user_and_company_and_particular_gakutika = {}
             object.user_and_company_and_gakutikas.each do |user_and_company_and_gakutika| 
                 if user_and_company_and_gakutika.gakutika_id == @instance_options[:gakutika_id] 
-                    user_and_company_and_particular_gakutika[:id] = user_and_company_and_gakutika.id
-                    user_and_company_and_particular_gakutika[:questions] = user_and_company_and_gakutika.questions
+                    user_and_company_and_particular_gakutika = ActiveModel::SerializableResource.new(user_and_company_and_gakutika, each_serializer: UserAndCompanyAndGakutikaSerializer, show_question_flag: true)
                     return user_and_company_and_particular_gakutika
                 end
             end
