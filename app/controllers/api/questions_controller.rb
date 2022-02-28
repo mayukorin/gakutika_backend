@@ -3,7 +3,8 @@ class Api::QuestionsController < ApplicationController
   include SigninUser
   include ExceptionHandler
 
-  before_action :is_question_of_user, only: [:update, :destroy]
+  before_action :is_question_of_signin_user, only: [:update, :destroy]
+  before_action :is_gakutika_of_signin_user, only: [:create]
 
 
   def create
@@ -123,9 +124,14 @@ class Api::QuestionsController < ApplicationController
       params.require(:question).permit(:query, :answer, :company_name, :day, :gakutika_id)
     end
 
-    def is_question_of_user
+    def is_question_of_signin_user
       question = Question.find_by(id: params[:id])
-      render json: { message: ['該当する質問が存在しません'] }, status: :bad_request unless question&.gakutika&.user&.id == signin_user(request.headers).id
+      render json: { message: ['該当する質問が存在しません'] }, status: :bad_request unless question&.user_and_company_and_gakutika&.gakutika&.user&.id == signin_user(request.headers).id
+    end
+
+    def is_gakutika_of_signin_user
+      gakutika = Gakutika.find_by(id: question_params[:gakutika_id])
+      render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request unless gakutika&.user&.id == signin_user(request.headers).id
     end
 
     def find_question(question_id)
