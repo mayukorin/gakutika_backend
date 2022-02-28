@@ -3,8 +3,8 @@ class Api::GakutikasController < ApplicationController
     include SigninUser
     include ExceptionHandler
 
-    before_action :is_gakutika_of_user, only: [:destroy, :update, :show]
-    before_action :is_gakutikas_of_user, only: [:update_tough_rank]
+    before_action :is_gakutika_of_signin_user, only: [:destroy, :update, :show]
+    before_action :is_gakutikas_of_signin_user, only: [:update_tough_rank]
 
     def index
         @gakutikas = Gakutika.eager_loading.where(user_id: signin_user(request.headers).id)
@@ -69,7 +69,7 @@ class Api::GakutikasController < ApplicationController
         def gakutika_params
             params.require(:gakutika).permit(:title, :content, :start_month, :end_month, :tough_rank)
         end
-        def is_gakutika_of_user
+        def is_gakutika_of_signin_user
             # @gakutika = signin_user(request.headers).gakutikas.eager_load(companies: :user_and_companies, questions: :company, user_and_company_and_gakutikas: :company).find_by(id: params[:id])
             # @gakutika = signin_user(request.headers).gakutikas.eager_load(:user_and_company_and_gakutikas, user_and_companies: [:company, user_and_company_and_gakutikas: :gakutika], questions: :company).find_by(id: params[:id])
             # @gakutika = signin_user(request.headers).gakutikas.eager_loading
@@ -77,7 +77,7 @@ class Api::GakutikasController < ApplicationController
             @gakutika = signin_user(request.headers).gakutikas.eager_loading.find_by(id: params[:id])
             render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request if @gakutika.nil?
         end
-        def is_gakutikas_of_user
+        def is_gakutikas_of_signin_user
             gakutika_cnt = signin_user(request.headers).gakutikas.count
             tough_rank_update_params.each do |id, new_tough_rank| 
                 gakutika = Gakutika.find_by(id: id)
