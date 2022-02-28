@@ -32,7 +32,7 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
 
     end
 
-    def correct_user
+    def is_user_and_company_and_gakutika_of_signin_user
       
       user_and_company_and_gakutika = UserAndCompanyAndGakutika.eager_load(:user).find_by(id: params[:id])
       render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request and return unless user_and_company_and_gakutika.user.id == signin_user(request.headers).id
