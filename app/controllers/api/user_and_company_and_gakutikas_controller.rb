@@ -47,10 +47,8 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
       gakutika = Gakutika.find_by!(title: gakutika_title)
     end
 
-    def correct_user2
-      # gakutika_title が入力されていない時は，学チカのタイトルを入力してくださいにしたいと思ったけど，該当のものが~ でよいか
-      # gakutika_title が存在しない時は，該当のものが存在しません，になる
-      gakutika = Gakutika.find_by!(title: user_and_company_and_gakutika_params[:gakutika_title])
-      render json: { message: ['不正な入力です'] }, status: :bad_request unless gakutika.user.id == signin_user(request.headers).id
+    def is_gakutika_of_signin_user
+      gakutika = Gakutika.find_by(title: user_and_company_and_gakutika_params[:gakutika_title])
+      render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request unless gakutika&.user&.id == signin_user(request.headers).id
     end
 end
