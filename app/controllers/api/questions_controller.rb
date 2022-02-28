@@ -22,9 +22,8 @@ class Api::QuestionsController < ApplicationController
       render json: { message: @question.errors.full_messages }, status: :bad_request
     end 
     '''
-    @question = Question.create!(question_params_for_save(question_params[:gakutika_id]))
+    @question = Question.create!(question_params_for_save)
     @company = Company.find_or_create_by!(name: question_params[:company_name])
-    @company.questions << @question
     @user_and_company = find_or_create_user_and_company(@company.id)
     @user_and_company_and_gakutika = find_or_create_user_and_company_and_gakutika(@user_and_company.id, question_params[:gakutika_id])
     @user_and_company_and_gakutika.questions << @question
@@ -58,11 +57,10 @@ class Api::QuestionsController < ApplicationController
     end
     '''
     @question = find_question(params[:id])
-    gakutika_id = question_params[:gakutika_id].to_s == '' ? @question&.gakutika&.id : question_params[:gakutika_id]
-    company_name = question_params[:company_name].to_s == '' ? @question&.company&.name : question_params[:company_name]
-    @question.update!(question_params_for_save(gakutika_id))
+    gakutika_id = question_params[:gakutika_id].to_s == '' ? @question&.user_and_company_and_gakutika&.gakutika&.id : question_params[:gakutika_id]
+    company_name = question_params[:company_name].to_s == '' ? @question&.user_and_company_and_gakutika&.user_and_company&.company&.name : question_params[:company_name]
+    @question.update!(question_params_for_save)
     @company = Company.find_or_create_by!(name: company_name)
-    @company.questions << @question
     @user_and_company = find_or_create_user_and_company(@company.id)
     @user_and_company_and_gakutika = find_or_create_user_and_company_and_gakutika(@user_and_company.id, gakutika_id)
     @user_and_company_and_gakutika.questions << @question
@@ -113,10 +111,10 @@ class Api::QuestionsController < ApplicationController
       return user_and_company_and_gakutika
     end
 
-    def question_params_for_save(gakutika_id)
+    def question_params_for_save
       question_params_for_save = question_params.to_h
       question_params_for_save.delete(:company_name)
-      question_params_for_save[:gakutika_id] = gakutika_id
+      question_params_for_save.delete(:gakutika_id)
       return question_params_for_save
     end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_26_102346) do
+ActiveRecord::Schema.define(version: 2022_02_28_171323) do
 
   create_table "companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -36,13 +36,9 @@ ActiveRecord::Schema.define(version: 2022_02_26_102346) do
     t.string "query", null: false
     t.date "day", null: false
     t.string "answer", null: false
-    t.bigint "company_id"
-    t.bigint "gakutika_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "user_and_company_and_gakutika_id"
-    t.index ["company_id"], name: "index_questions_on_company_id"
-    t.index ["gakutika_id"], name: "index_questions_on_gakutika_id"
     t.index ["user_and_company_and_gakutika_id"], name: "index_questions_on_user_and_company_and_gakutika_id"
   end
 
@@ -75,8 +71,6 @@ ActiveRecord::Schema.define(version: 2022_02_26_102346) do
   end
 
   add_foreign_key "gakutikas", "users"
-  add_foreign_key "questions", "companies"
-  add_foreign_key "questions", "gakutikas"
   add_foreign_key "questions", "user_and_company_and_gakutikas"
   add_foreign_key "user_and_companies", "companies"
   add_foreign_key "user_and_companies", "users"

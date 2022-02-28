@@ -2,17 +2,12 @@ class Api::UserAndCompaniesController < ApplicationController
   include Service
   include SigninUser
   include ExceptionHandler 
-  before_action :correct_user, only: [:destroy, :update]
+  before_action :is_user_and_company_of_signin_user, only: [:destroy, :update]
 
   def destroy
    
     @user_and_company = find_user_and_company(params[:id])
     questions = Question.where(company: @user_and_company.company.id)
-    questions.each do |q|
-      # puts question_id
-      # q = Question.find(question_id)
-      q.destroy if q.user.id == @user_and_company.user.id
-    end
     @user_and_company.destroy
     
     render status: :no_content
@@ -42,10 +37,6 @@ class Api::UserAndCompaniesController < ApplicationController
     @user_and_company = find_user_and_company(params[:id])
     @company = Company.find_or_create_by!(name: user_and_company_params[:company_name])
     @user_and_company.update!(company_id: @company.id)
-    questions = Question.where(company_id: @user_and_company.company.id)
-    questions.each do |q|
-      q.update(company_id: @company.id) if q.user.id == @user_and_company.user.id
-    end
     render status: :accepted
   end
 

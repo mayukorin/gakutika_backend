@@ -8,6 +8,6 @@ class QuestionSerializer < ActiveModel::Serializer
   end
 
   def companyName
-    object.company.name
+    object.user_and_company_and_gakutika.user_and_company.company.name
   end
 end
