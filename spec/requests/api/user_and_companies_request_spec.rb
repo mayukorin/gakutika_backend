@@ -25,10 +25,10 @@ RSpec.describe "Api::UserAndCompanies", type: :request do
             UserAndCompanyAndGakutika.create(gakutika_id: gakutika.id, user_and_company_id: user_and_company.id)
         end
         let!(:question) do
-          gakutika.questions.create(query: "質問内容", answer: "解答", company_id: company.id, day: Date.new(2021, 11, 4))
+          Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
         let!(:question2) do
-          gakutika.questions.create(query: "質問内容2", answer: "解答2", company_id: company.id, day: Date.new(2021, 11, 4))
+          Question.create(query: "質問内容2", answer: "解答2", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
         it 'status no content を返す' do
           delete api_user_and_company_path(user_and_company.id), headers: { "Authorization" => "JWT " + token }
@@ -38,8 +38,6 @@ RSpec.describe "Api::UserAndCompanies", type: :request do
           expect(Question.count).to match(0)
         end
       end
-
-      
     end
 
     describe "#update" do
@@ -64,7 +62,7 @@ RSpec.describe "Api::UserAndCompanies", type: :request do
             UserAndCompanyAndGakutika.create(gakutika_id: gakutika.id, user_and_company_id: user_and_company.id)
         end
         let!(:question) do
-          gakutika.questions.create(query: "質問内容", answer: "解答", company_id: company.id, day: Date.new(2021, 11, 4))
+          Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
         it 'status accepted を返す' do
           patch api_user_and_company_path(user_and_company.id), headers: { "Authorization" => "JWT " + token }, params: { user_and_company: { company_name: "abc" } }

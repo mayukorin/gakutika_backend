@@ -53,7 +53,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                     # puts JSON.parse(response.body)
                     # puts "-----------"
                     new_gakutika = user.gakutikas.first
-                    expected_response = { 'content' => '内容です', 'endMonth' => '2018-12', 'id' => new_gakutika.id, 'questions' => [], 'startMonth' => '2018-11', 'title' => 'タイトル', 'toughRank' => user_gakutika_cnt, 'user_and_companies' => [] }
+                    expected_response = { 'content' => '内容です', 'endMonth' => '2018-12', 'id' => new_gakutika.id, 'startMonth' => '2018-11', 'title' => 'タイトル', 'toughRank' => user_gakutika_cnt }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end
@@ -132,7 +132,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it 'status ok と該当の学チカを返す' do
                     get api_gakutika_path(id: gakutika.id), headers: { "Authorization" => "JWT " + token }
                     expect(response).to have_http_status(:ok)
-                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2017-10', 'id' => gakutika.id, 'questions' => [], 'startMonth' => '2017-09', 'title' => 'aaaaaa', 'toughRank' => 1, 'user_and_companies' => []}
+                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2017-10', 'id' => gakutika.id, 'startMonth' => '2017-09', 'title' => 'aaaaaa', 'toughRank' => 1, 'user_and_companies' => []}
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
             end
@@ -194,7 +194,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it "status accepted と更新した学チカの情報を返す" do
                     patch api_gakutika_path(gakutika.id), headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル", content: "内容です", start_month: "2018-09", end_month: "2018-12", tough_rank: "1"} }
                     expect(response).to have_http_status(:accepted)
-                    expected_response = { 'content' => '内容です', 'endMonth' => '2018-12', 'id' => gakutika.id, 'questions' => [], 'startMonth' => '2018-09', 'title' => 'タイトル', 'toughRank' => 1, 'user_and_companies' => [] }
+                    expected_response = { 'content' => '内容です', 'endMonth' => '2018-12', 'id' => gakutika.id, 'startMonth' => '2018-09', 'title' => 'タイトル', 'toughRank' => 1,  }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
 
@@ -214,7 +214,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it "status accpeted を返す" do
                     patch api_gakutika_path(gakutika.id), headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル",  content: "bbbbbbbbbbbbbb", end_month: "2018-12", tough_rank: "1"} }
                     expect(response).to have_http_status(:accepted)
-                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2018-12', 'id' => gakutika.id, 'questions' => [], 'startMonth' => '2017-09', 'title' => 'タイトル', 'toughRank' => 1, 'user_and_companies' => [] }
+                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2018-12', 'id' => gakutika.id, 'startMonth' => '2017-09', 'title' => 'タイトル', 'toughRank' => 1 }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
 
@@ -254,7 +254,7 @@ RSpec.describe "Api::Gakutikas", type: :request do
                 it "status accpeted を返す" do
                     patch api_gakutika_path(gakutika.id), headers: { "Authorization" => "JWT " + token }, params: { gakutika: { title: "タイトル",  content: "bbbbbbbbbbbbbb", start_month: "2018-09",  end_month: "2018-12"} }
                     expect(response).to have_http_status(:accepted)
-                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2018-12', 'id' => gakutika.id, 'questions' => [], 'startMonth' => '2018-09', 'title' => 'タイトル', 'toughRank' => 2, 'user_and_companies' => [] }
+                    expected_response = { 'content' => 'bbbbbbbbbbbbbb', 'endMonth' => '2018-12', 'id' => gakutika.id, 'startMonth' => '2018-09', 'title' => 'タイトル', 'toughRank' => 2 }
                     expect(JSON.parse(response.body)).to match(expected_response)
                 end
 

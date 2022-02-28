@@ -12,7 +12,7 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "有効" do
-      question = gakutika.questions.build(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id, day: Date.new(2017,10,7))
+      question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", day: Date.new(2017,10,7))
       expect(question).to be_valid
     end
   end
@@ -27,7 +27,7 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(query: nil, answer: "bbbbbbbbbbbbbb", company_id: company.id, day: Date.new(2017,10,7))
+      question = Question.new(query: nil, answer: "bbbbbbbbbbbbbb", day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["質問内容を入力してください"])
     end
@@ -43,7 +43,7 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(query: " ", answer: "bbbbbbbbbbbbbb", company_id: company.id, day: Date.new(2017,10,7))
+      question = Question.new(query: " ", answer: "bbbbbbbbbbbbbb", day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["質問内容を入力してください"])
     end
@@ -59,7 +59,7 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(answer: "bbbbbbbbbbbbbb", company_id: company.id, day: Date.new(2017,10,7))
+      question = Question.new(answer: "bbbbbbbbbbbbbb", day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["質問内容を入力してください"])
     end
@@ -75,7 +75,7 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(query: "aaaaaa", answer: nil, company_id: company.id, day: Date.new(2017,10,7))
+      question = Question.new(query: "aaaaaa", answer: nil, day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["解答を入力してください"])
     end
@@ -91,7 +91,7 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(query: "aaaaaa", answer: " ", company_id: company.id, day: Date.new(2017,10,7))
+      question = Question.new(query: "aaaaaa", answer: " ", day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["解答を入力してください"])
     end
@@ -107,11 +107,12 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(query: "aaaaaa", company_id: company.id, day: Date.new(2017,10,7))
+      question = Question.new(query: "aaaaaa", day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["解答を入力してください"])
     end
   end
+  '''
   context "company_id がnilの場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -123,7 +124,7 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: nil, day: Date.new(2017,10,7))
+      question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: nil, day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["企業を入力してください"])
     end
@@ -139,7 +140,7 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: " ", day: Date.new(2017,10,7))
+      question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: " ", day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["企業を入力してください"])
     end
@@ -155,7 +156,7 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", day: Date.new(2017,10,7))
+      question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["企業を入力してください"])
     end
@@ -171,11 +172,12 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id+10, day: Date.new(2017,10,7))
+      question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id+10, day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["企業を入力してください"])
     end
   end
+  '''
   context "day が nil の場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -187,7 +189,7 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id, day: nil)
+      question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", day: nil)
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["日付けを入力してください"])
     end
@@ -203,7 +205,7 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id, day: " ")
+      question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", day: " ")
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["日付けを入力してください"])
     end
@@ -219,11 +221,12 @@ RSpec.describe Question, type: :model do
       FactoryBot.create(:company)
     end
     it "無効" do
-      question = gakutika.questions.build(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", company_id: company.id)
+      question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb")
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["日付けを入力してください"])
     end
   end
+  '''
   context "gakutika_id が nil の場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -288,4 +291,5 @@ RSpec.describe Question, type: :model do
       expect(question.errors.full_messages).to match(["学チカを入力してください"])
     end
   end
+  '''
 end
