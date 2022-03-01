@@ -1,7 +1,7 @@
 class Gakutika < ApplicationRecord
     belongs_to :user
     has_many :user_and_company_and_gakutikas, dependent: :destroy
-    validates :title, presence: true
+    validates :title, presence: true, uniqueness: { scope: :user_id, case_sensitive: true }
     validates :content, presence: true
     validates :start_month, presence: true
     validates :end_month, presence: true
