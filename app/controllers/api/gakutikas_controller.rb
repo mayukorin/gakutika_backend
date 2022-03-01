@@ -53,6 +53,11 @@ class Api::GakutikasController < ApplicationController
         }
         render status: :no_content
     end
+
+    def search
+        @gakutika_titles = Gakutika.where('title like ?', "%#{params[:title]}%").where(user_id: signin_user(request.headers).id).pluck(:title)
+        render json: { gakutika_titles: @gakutika_titles }, status: :ok
+    end
     
     private
         def tough_rank_update_params
