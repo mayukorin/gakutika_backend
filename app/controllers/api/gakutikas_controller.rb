@@ -75,6 +75,7 @@ class Api::GakutikasController < ApplicationController
             # @gakutika = signin_user(request.headers).gakutikas.eager_loading
             
             @gakutika = signin_user(request.headers).gakutikas.eager_loading.find_by(id: params[:id])
+            # @gakutika = signin_user(request.headers).gakutikas.find_by(id: params[:id])
             render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request if @gakutika.nil?
         end
         def is_gakutikas_of_signin_user

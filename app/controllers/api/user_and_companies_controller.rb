@@ -36,7 +36,7 @@ class Api::UserAndCompaniesController < ApplicationController
     '''
     @user_and_company = find_user_and_company(params[:id])
     @company = Company.find_or_create_by!(name: user_and_company_params[:company_name])
-    @user_and_company.update!(company_id: @company.id)
+    @user_and_company.update!(company_id: @company.id, latest_interview_day: user_and_company_params[:latest_interview_day])
     render status: :accepted
   end
 
@@ -54,7 +54,7 @@ class Api::UserAndCompaniesController < ApplicationController
     end
     '''
     @company = Company.find_or_create_by!(name: user_and_company_params[:company_name])
-    @user_and_company = UserAndCompany.create!(user_id: signin_user(request.headers).id, company_id: @company.id)
+    @user_and_company = UserAndCompany.create!(user_id: signin_user(request.headers).id, company_id: @company.id, latest_interview_day: user_and_company_params[:latest_interview_day])
     render json: @user_and_company, serializer: UserAndCompanySerializer, status: :created
   end
 
@@ -68,7 +68,7 @@ class Api::UserAndCompaniesController < ApplicationController
       user_and_company = UserAndCompany.eager_load(:user).find_by!(id: user_and_company_id)
     end
     def user_and_company_params
-      params.require(:user_and_company).permit(:company_name)
+      params.require(:user_and_company).permit(:company_name, :latest_interview_day)
     end
     
 end

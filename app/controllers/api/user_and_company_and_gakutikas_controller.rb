@@ -13,10 +13,7 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
   def create
     
     @company = Company.find_or_create_by!(name: user_and_company_and_gakutika_params[:company_name])
-    @user_and_company = UserAndCompany.find_or_create_by!(user_id: signin_user(request.headers).id, company_id: @company.id)
-    # @company = Company.find_or_create_by!(name: user_and_company_and_gakutika_params[:company_name])
-    # @company.user_and_companies << @user_and_company
-    # @user_and_company = UserAndCompany.find_by!(user_id: signin_user(request.headers).id, company_id: @company.id)
+    @user_and_company = UserAndCompany.find_or_create_by!(user_id: signin_user(request.headers).id, company_id: @company.id, latest_interview_day: user_and_company_and_gakutika_params[:latest_interview_day])
     @gakutika = find_gakutika(user_and_company_and_gakutika_params[:gakutika_title])
     @user_and_company_and_gakutika = UserAndCompanyAndGakutika.create!(gakutika_id: @gakutika.id, user_and_company_id: @user_and_company.id)
     render json: @user_and_company_and_gakutika, serializer: UserAndCompanyAndGakutikaSerializer, status: :created
@@ -40,7 +37,7 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
     end
     
     def user_and_company_and_gakutika_params
-      params.require(:user_and_company_and_gakutika).permit(:company_name, :gakutika_title)
+      params.require(:user_and_company_and_gakutika).permit(:company_name, :gakutika_title, :latest_interview_day)
     end
 
     def find_gakutika(gakutika_title)
