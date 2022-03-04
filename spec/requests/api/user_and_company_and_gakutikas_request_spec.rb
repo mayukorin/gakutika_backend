@@ -25,7 +25,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             UserAndCompanyAndGakutika.create(gakutika_id: gakutika.id, user_and_company_id: user_and_company.id)
         end
         let!(:question) do
-          gakutika.questions.create(query: "質問内容", answer: "解答", company_id: company.id, day: Date.new(2021, 11, 4))
+          Question.new(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
         it 'status no content を返す' do
           delete api_user_and_company_and_gakutika_path(user_and_company_and_gakutika.id), headers: { "Authorization" => "JWT " + token }
@@ -52,10 +52,71 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
         it 'status created を返す' do
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title, latest_interview_day: "2021-11-04" }}, headers: { "Authorization" => "JWT " + token }
+          expect(response).to have_http_status(:created)
+        end
+      end
+
+      context "latest_interview_day が nil でもよい" do
+        let!(:user) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user.id, exp: exp)
+        end
+        let!(:gakutika) do
+            user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+        end
+        it 'status created を返す' do
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title, latest_interview_day: nil }}, headers: { "Authorization" => "JWT " + token }
+          expect(response).to have_http_status(:created)
+        end
+      end
+
+      context "latest_interview_day が 空白 でもよい" do
+        let!(:user) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user.id, exp: exp)
+        end
+        let!(:gakutika) do
+            user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+        end
+        it 'status created を返す' do
+          post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title, latest_interview_day: "" }}, headers: { "Authorization" => "JWT " + token }
+          expect(response).to have_http_status(:created)
+        end
+      end
+
+      context "latest_interview_day が param に存在しなくてもよい" do
+        let!(:user) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user.id, exp: exp)
+        end
+        let!(:gakutika) do
+            user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
+        end
+        it 'status created を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:created)
         end
       end
+
 
       context "gakutika_idで存在しない学チカを指定しているとき" do
         let!(:user) do
@@ -77,7 +138,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         it 'status bad request を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: "なし" }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
-          expected_response = { 'message' => ['該当のものが存在しません'] }
+          expected_response = { 'message' => ['該当する学チカが存在しません'] }
           expect(JSON.parse(response.body)).to match(expected_response)
         end
       end
@@ -105,7 +166,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         it 'status bad request を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
-          expected_response = { 'message' => ['不正な入力です'] }
+          expected_response = { 'message' => ['該当する学チカが存在しません'] }
           expect(JSON.parse(response.body)).to match(expected_response)
         end
       end
@@ -182,7 +243,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         it 'status bad request を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name, gakutika_title: " " }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
-          expected_response = { 'message' => ['該当のものが存在しません'] }
+          expected_response = { 'message' => ['該当する学チカが存在しません'] }
           expect(JSON.parse(response.body)).to match(expected_response)
         end
       end
@@ -205,7 +266,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         it 'status bad request を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name}}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
-          expected_response = { 'message' => ['該当のものが存在しません'] }
+          expected_response = { 'message' => ['該当する学チカが存在しません'] }
           expect(JSON.parse(response.body)).to match(expected_response)
         end
       end

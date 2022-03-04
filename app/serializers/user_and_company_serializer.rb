@@ -1,7 +1,8 @@
 class UserAndCompanySerializer < ActiveModel::Serializer
-    attribute :id
+    attributes :id
+    attribute :latest_interview_day 
     belongs_to :company
-    has_many :user_and_company_and_gakutikas
+    has_many :user_and_company_and_gakutikas, show_question_flag: false
     attribute :user_and_company_and_particular_gakutika
     '''
     def company
@@ -14,10 +15,15 @@ class UserAndCompanySerializer < ActiveModel::Serializer
     '''
 
     def user_and_company_and_particular_gakutika
-        puts "user_and_company_pg"
-        puts @instance_options[:gakutika_id]
-        unless @instance_options[:gakutika_id].nil?
-            object.user_and_company_and_gakutikas.find_by(gakutika_id: @instance_options[:gakutika_id])
+        unless @instance_options[:gakutika_id].nil? 
+           # 余計な クエリ発行をさける
+           user_and_company_and_particular_gakutika = {}
+            object.user_and_company_and_gakutikas.each do |user_and_company_and_gakutika| 
+                if user_and_company_and_gakutika.gakutika_id == @instance_options[:gakutika_id] 
+                    user_and_company_and_particular_gakutika = ActiveModel::SerializableResource.new(user_and_company_and_gakutika, each_serializer: UserAndCompanyAndGakutikaSerializer, show_question_flag: true)
+                    return user_and_company_and_particular_gakutika
+                end
+            end
         end
     end
 end

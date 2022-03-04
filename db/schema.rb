@@ -10,37 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_10_170331) do
+ActiveRecord::Schema.define(version: 2022_03_01_005129) do
 
   create_table "companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_companies_on_name", unique: true
   end
 
   create_table "gakutikas", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "title"
-    t.string "content"
+    t.string "title", null: false
+    t.string "content", null: false
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "tough_rank"
-    t.date "start_month"
-    t.date "end_month"
+    t.date "start_month", null: false
+    t.date "end_month", null: false
+    t.index ["title", "user_id"], name: "index_gakutikas_on_title_and_user_id", unique: true
     t.index ["user_id", "tough_rank"], name: "index_gakutikas_on_user_id_and_tough_rank", unique: true
     t.index ["user_id"], name: "index_gakutikas_on_user_id"
   end
 
   create_table "questions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "query"
-    t.date "day"
-    t.string "answer"
-    t.bigint "company_id"
-    t.bigint "gakutika_id"
+    t.string "query", null: false
+    t.date "day", null: false
+    t.string "answer", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["company_id"], name: "index_questions_on_company_id"
-    t.index ["gakutika_id"], name: "index_questions_on_gakutika_id"
+    t.bigint "user_and_company_and_gakutika_id"
+    t.index ["user_and_company_and_gakutika_id"], name: "index_questions_on_user_and_company_and_gakutika_id"
   end
 
   create_table "user_and_companies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -48,7 +48,9 @@ ActiveRecord::Schema.define(version: 2022_02_10_170331) do
     t.bigint "company_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.date "latest_interview_day"
     t.index ["company_id"], name: "index_user_and_companies_on_company_id"
+    t.index ["user_id", "company_id"], name: "index_user_and_companies_on_user_id_and_company_id", unique: true
     t.index ["user_id"], name: "index_user_and_companies_on_user_id"
   end
 
@@ -62,8 +64,8 @@ ActiveRecord::Schema.define(version: 2022_02_10_170331) do
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "name"
-    t.string "email"
+    t.string "name", null: false
+    t.string "email", null: false
     t.string "password_digest"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -71,8 +73,7 @@ ActiveRecord::Schema.define(version: 2022_02_10_170331) do
   end
 
   add_foreign_key "gakutikas", "users"
-  add_foreign_key "questions", "companies"
-  add_foreign_key "questions", "gakutikas"
+  add_foreign_key "questions", "user_and_company_and_gakutikas"
   add_foreign_key "user_and_companies", "companies"
   add_foreign_key "user_and_companies", "users"
   add_foreign_key "user_and_company_and_gakutikas", "gakutikas"

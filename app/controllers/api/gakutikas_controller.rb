@@ -3,11 +3,11 @@ class Api::GakutikasController < ApplicationController
     include SigninUser
     include ExceptionHandler
 
-    before_action :is_gakutika_of_user, only: [:destroy, :update, :show]
-    before_action :is_gakutikas_of_user, only: [:update_tough_rank]
+    before_action :is_gakutika_of_signin_user, only: [:destroy, :update, :show]
+    before_action :is_gakutikas_of_signin_user, only: [:update_tough_rank]
 
     def index
-        @gakutikas = Gakutika.where(user_id: signin_user(request.headers).id)
+        @gakutikas = Gakutika.eager_loading.where(user_id: signin_user(request.headers).id)
         render json: @gakutikas, each_serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :ok
     end
     def update_tough_rank
@@ -30,7 +30,8 @@ class Api::GakutikasController < ApplicationController
     end
 
     def show
-        render json: @gakutika, serializer: GakutikaSerializer, include: [:questions, user_and_companies: [:company, user_and_company_and_gakutikas: :gakutika ]], show_gakutika_detail_flag: true, user_id: signin_user(request.headers).id, gakutika_id: @gakutika.id, status: :ok
+        puts @gakutika
+        render json: @gakutika, serializer: GakutikaSerializer, include: [:questions, user_and_companies: [:company, user_and_company_and_gakutikas: [:gakutika, :questions] ]], show_gakutika_detail_flag: true, user_id: signin_user(request.headers).id, gakutika_id: @gakutika.id, status: :ok
     end
 
     def update
@@ -52,6 +53,11 @@ class Api::GakutikasController < ApplicationController
         }
         render status: :no_content
     end
+
+    def search
+        @gakutika_titles = Gakutika.where('title like ?', "%#{params[:title]}%").where(user_id: signin_user(request.headers).id).pluck(:title)
+        render json: { gakutika_titles: @gakutika_titles }, status: :ok
+    end
     
     private
         def tough_rank_update_params
@@ -68,12 +74,16 @@ class Api::GakutikasController < ApplicationController
         def gakutika_params
             params.require(:gakutika).permit(:title, :content, :start_month, :end_month, :tough_rank)
         end
-        def is_gakutika_of_user
+        def is_gakutika_of_signin_user
             # @gakutika = signin_user(request.headers).gakutikas.eager_load(companies: :user_and_companies, questions: :company, user_and_company_and_gakutikas: :company).find_by(id: params[:id])
-            @gakutika = signin_user(request.headers).gakutikas.eager_load(user_and_companies: [:company, user_and_company_and_gakutikas: :gakutika], questions: :company).find_by(id: params[:id])
+            # @gakutika = signin_user(request.headers).gakutikas.eager_load(:user_and_company_and_gakutikas, user_and_companies: [:company, user_and_company_and_gakutikas: :gakutika], questions: :company).find_by(id: params[:id])
+            # @gakutika = signin_user(request.headers).gakutikas.eager_loading
+            
+            @gakutika = signin_user(request.headers).gakutikas.eager_loading.find_by(id: params[:id])
+            # @gakutika = signin_user(request.headers).gakutikas.find_by(id: params[:id])
             render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request if @gakutika.nil?
         end
-        def is_gakutikas_of_user
+        def is_gakutikas_of_signin_user
             gakutika_cnt = signin_user(request.headers).gakutikas.count
             tough_rank_update_params.each do |id, new_tough_rank| 
                 gakutika = Gakutika.find_by(id: id)

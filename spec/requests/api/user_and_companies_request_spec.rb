@@ -25,10 +25,10 @@ RSpec.describe "Api::UserAndCompanies", type: :request do
             UserAndCompanyAndGakutika.create(gakutika_id: gakutika.id, user_and_company_id: user_and_company.id)
         end
         let!(:question) do
-          gakutika.questions.create(query: "質問内容", answer: "解答", company_id: company.id, day: Date.new(2021, 11, 4))
+          Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
         let!(:question2) do
-          gakutika.questions.create(query: "質問内容2", answer: "解答2", company_id: company.id, day: Date.new(2021, 11, 4))
+          Question.create(query: "質問内容2", answer: "解答2", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
         it 'status no content を返す' do
           delete api_user_and_company_path(user_and_company.id), headers: { "Authorization" => "JWT " + token }
@@ -38,8 +38,6 @@ RSpec.describe "Api::UserAndCompanies", type: :request do
           expect(Question.count).to match(0)
         end
       end
-
-      
     end
 
     describe "#update" do
@@ -64,10 +62,10 @@ RSpec.describe "Api::UserAndCompanies", type: :request do
             UserAndCompanyAndGakutika.create(gakutika_id: gakutika.id, user_and_company_id: user_and_company.id)
         end
         let!(:question) do
-          gakutika.questions.create(query: "質問内容", answer: "解答", company_id: company.id, day: Date.new(2021, 11, 4))
+          Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
         it 'status accepted を返す' do
-          patch api_user_and_company_path(user_and_company.id), headers: { "Authorization" => "JWT " + token }, params: { user_and_company: { company_name: "abc" } }
+          patch api_user_and_company_path(user_and_company.id), headers: { "Authorization" => "JWT " + token }, params: { user_and_company: { company_name: "abc", latest_interview_day: "2021-11-04" } }
           expect(response).to have_http_status(:accepted)
           expect(user_and_company.reload.company.name).to match("abc")
         end
@@ -87,15 +85,73 @@ RSpec.describe "Api::UserAndCompanies", type: :request do
             TokenProvider.new.call(user_id: user2.id, exp: exp)
         end
         it 'status created を返す' do
-          puts user2.password
-          puts "おかしい"
-          puts "あああ"
           user = User.find(user2.id)
-          puts user.password
-          puts "いいい"
+          post api_user_and_companies_path, headers: { "Authorization" => "JWT " + token }, params: { user_and_company: { company_name: "abc", latest_interview_day: "2021-11-04" } }
+          puts JSON.parse(response.body)
+          expect(response).to have_http_status(:created)
+          
+          # expected_response = {"id"=>5, "company"=>{"name"=>"abc"}, "user_and_company_and_gakutikas"=>[]}
+          # expect(JSON.parse(response.body)).to match(expected_response)
+        end
+      end 
+      context "latest_interview_day が nil でもよい" do
+        let!(:user2) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user2.id, exp: exp)
+        end
+        it 'status created を返す' do
+          user = User.find(user2.id)
+          post api_user_and_companies_path, headers: { "Authorization" => "JWT " + token }, params: { user_and_company: { company_name: "abc", latest_interview_day: nil } }
+          puts JSON.parse(response.body)
+          expect(response).to have_http_status(:created)
+          
+          # expected_response = {"id"=>5, "company"=>{"name"=>"abc"}, "user_and_company_and_gakutikas"=>[]}
+          # expect(JSON.parse(response.body)).to match(expected_response)
+        end
+      end 
+      context "latest_interview_day が 空白 でもよい" do
+        let!(:user2) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user2.id, exp: exp)
+        end
+        it 'status created を返す' do
+          user = User.find(user2.id)
+          post api_user_and_companies_path, headers: { "Authorization" => "JWT " + token }, params: { user_and_company: { company_name: "abc", latest_interview_day: "" } }
+          puts JSON.parse(response.body)
+          expect(response).to have_http_status(:created)
+          
+          # expected_response = {"id"=>5, "company"=>{"name"=>"abc"}, "user_and_company_and_gakutikas"=>[]}
+          # expect(JSON.parse(response.body)).to match(expected_response)
+        end
+      end 
+      context "latest_interview_day が param に存在しない場合" do
+        let!(:user2) do
+          FactoryBot.create(:user)
+        end
+        let!(:company) do
+            FactoryBot.create(:company)
+        end
+        let!(:token) do
+            exp = Time.now.to_i + 4 * 60 
+            TokenProvider.new.call(user_id: user2.id, exp: exp)
+        end
+        it 'status created を返す' do
+          user = User.find(user2.id)
           post api_user_and_companies_path, headers: { "Authorization" => "JWT " + token }, params: { user_and_company: { company_name: "abc" } }
           puts JSON.parse(response.body)
-          # expect(response).to have_http_status(:created)
+          expect(response).to have_http_status(:created)
           
           # expected_response = {"id"=>5, "company"=>{"name"=>"abc"}, "user_and_company_and_gakutikas"=>[]}
           # expect(JSON.parse(response.body)).to match(expected_response)

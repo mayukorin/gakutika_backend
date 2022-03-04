@@ -3,7 +3,8 @@ class Api::QuestionsController < ApplicationController
   include SigninUser
   include ExceptionHandler
 
-  before_action :is_question_of_user, only: [:update, :destroy]
+  before_action :is_question_of_signin_user, only: [:update, :destroy]
+  before_action :is_gakutika_of_signin_user, only: [:create]
 
 
   def create
@@ -21,11 +22,11 @@ class Api::QuestionsController < ApplicationController
       render json: { message: @question.errors.full_messages }, status: :bad_request
     end 
     '''
-    @question = Question.create!(question_params_for_save(question_params[:gakutika_id]))
+    @question = Question.create!(question_params_for_save)
     @company = Company.find_or_create_by!(name: question_params[:company_name])
-    @company.questions << @question
     @user_and_company = find_or_create_user_and_company(@company.id)
     @user_and_company_and_gakutika = find_or_create_user_and_company_and_gakutika(@user_and_company.id, question_params[:gakutika_id])
+    @user_and_company_and_gakutika.questions << @question
 
     render json: @question, serializer: QuestionSerializer, status: :created
 
@@ -56,13 +57,13 @@ class Api::QuestionsController < ApplicationController
     end
     '''
     @question = find_question(params[:id])
-    gakutika_id = question_params[:gakutika_id].to_s == '' ? @question&.gakutika&.id : question_params[:gakutika_id]
-    company_name = question_params[:company_name].to_s == '' ? @question&.company&.name : question_params[:company_name]
-    @question.update!(question_params_for_save(gakutika_id))
+    gakutika_id = question_params[:gakutika_id].to_s == '' ? @question&.user_and_company_and_gakutika&.gakutika&.id : question_params[:gakutika_id]
+    company_name = question_params[:company_name].to_s == '' ? @question&.user_and_company_and_gakutika&.user_and_company&.company&.name : question_params[:company_name]
+    @question.update!(question_params_for_save)
     @company = Company.find_or_create_by!(name: company_name)
-    @company.questions << @question
     @user_and_company = find_or_create_user_and_company(@company.id)
     @user_and_company_and_gakutika = find_or_create_user_and_company_and_gakutika(@user_and_company.id, gakutika_id)
+    @user_and_company_and_gakutika.questions << @question
     
     render json: @question, serializer: QuestionSerializer, status: :accepted
   end
@@ -110,10 +111,10 @@ class Api::QuestionsController < ApplicationController
       return user_and_company_and_gakutika
     end
 
-    def question_params_for_save(gakutika_id)
+    def question_params_for_save
       question_params_for_save = question_params.to_h
       question_params_for_save.delete(:company_name)
-      question_params_for_save[:gakutika_id] = gakutika_id
+      question_params_for_save.delete(:gakutika_id)
       return question_params_for_save
     end
 
@@ -121,9 +122,14 @@ class Api::QuestionsController < ApplicationController
       params.require(:question).permit(:query, :answer, :company_name, :day, :gakutika_id)
     end
 
-    def is_question_of_user
+    def is_question_of_signin_user
       question = Question.find_by(id: params[:id])
-      render json: { message: ['該当する質問が存在しません'] }, status: :bad_request unless question&.gakutika&.user&.id == signin_user(request.headers).id
+      render json: { message: ['該当する質問が存在しません'] }, status: :bad_request unless question&.user_and_company_and_gakutika&.gakutika&.user&.id == signin_user(request.headers).id
+    end
+
+    def is_gakutika_of_signin_user
+      gakutika = Gakutika.find_by(id: question_params[:gakutika_id])
+      render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request unless gakutika&.user&.id == signin_user(request.headers).id
     end
 
     def find_question(question_id)
