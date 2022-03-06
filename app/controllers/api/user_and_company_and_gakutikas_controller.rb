@@ -13,7 +13,7 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
   def create
     
     @company = Company.find_or_create_by!(name: user_and_company_and_gakutika_params[:company_name])
-    @user_and_company = UserAndCompany.find_or_create_by!(user_id: signin_user(request.headers).id, company_id: @company.id, latest_interview_day: user_and_company_and_gakutika_params[:latest_interview_day])
+    @user_and_company = UserAndCompany.create_with(latest_interview_day: user_and_company_and_gakutika_params[:latest_interview_day]).find_or_create_by!(user_id: signin_user(request.headers).id, company_id: @company.id)
     @gakutika = find_gakutika(user_and_company_and_gakutika_params[:gakutika_title])
     @user_and_company_and_gakutika = UserAndCompanyAndGakutika.create!(gakutika_id: @gakutika.id, user_and_company_id: @user_and_company.id)
     render json: @user_and_company_and_gakutika, serializer: UserAndCompanyAndGakutikaSerializer, status: :created
