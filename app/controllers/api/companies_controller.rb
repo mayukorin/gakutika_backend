@@ -3,8 +3,9 @@ class Api::CompaniesController < ApplicationController
     include SigninUser
     include ExceptionHandler
 
-    def index
-        render json: @user_and_companies, each_serializer: UserAndCompanySerializer, show_gakutika_detail_flag: false, status: :ok
+    def search
+        @company_names = Company.where('name like ?', "%#{params[:name]}%").pluck(:name)
+        render json: { company_names: @company_names }, status: :ok
     end
 
 
