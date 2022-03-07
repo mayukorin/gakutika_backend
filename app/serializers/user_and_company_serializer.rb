@@ -4,7 +4,7 @@ class UserAndCompanySerializer < ActiveModel::Serializer
     belongs_to :company
     has_many :user_and_company_and_gakutikas, show_question_flag: false
     attribute :user_and_company_and_particular_gakutika
-    '''
+    '
     def company
         CompanySerializer.new(object.company)
     end
@@ -12,7 +12,7 @@ class UserAndCompanySerializer < ActiveModel::Serializer
     def user_and_company_and_gakutikas
         UserAndCompanyAndGakutikaSerializer.new(object.user_and_company_and_gakutikas.first)
     end
-    '''
+    '
 
     def user_and_company_and_particular_gakutika
         unless @instance_options[:gakutika_id].nil? 

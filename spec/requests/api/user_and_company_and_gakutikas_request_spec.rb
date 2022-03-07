@@ -15,7 +15,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             UserAndCompany.create(company_id: company.id, user_id: user.id)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -27,6 +27,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         let!(:question) do
           Question.new(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
+
         it 'status no content を返す' do
           delete api_user_and_company_and_gakutika_path(user_and_company_and_gakutika.id), headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:no_content)
@@ -45,12 +46,13 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             FactoryBot.create(:company)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
+
         it 'status created を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title, latest_interview_day: "2021-11-04" }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:created)
@@ -65,12 +67,13 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             FactoryBot.create(:company)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
+
         it 'status created を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title, latest_interview_day: nil }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:created)
@@ -85,12 +88,13 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             FactoryBot.create(:company)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
+
         it 'status created を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title, latest_interview_day: "" }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:created)
@@ -105,12 +109,13 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             FactoryBot.create(:company)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
+
         it 'status created を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:created)
@@ -126,7 +131,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             FactoryBot.create(:company)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -135,6 +140,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         let!(:user_and_company) do
           UserAndCompany.create(company_id: company.id, user_id: user.id)
         end
+
         it 'status bad request を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: "なし" }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
@@ -154,7 +160,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             FactoryBot.create(:company)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -163,6 +169,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         let!(:user_and_company) do
           UserAndCompany.create(company_id: company.id, user_id: user.id)
         end
+
         it 'status bad request を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: "企業A", gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
@@ -179,7 +186,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             FactoryBot.create(:company)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -204,7 +211,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             FactoryBot.create(:company)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -216,6 +223,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         let!(:user_and_company_and_gakutika) do
           user_and_company.user_and_company_and_gakutikas.create(gakutika_id: gakutika.id, user_and_company_id: user_and_company.id)
         end
+
         it 'もともとその企業でその学チカを話す予定です を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: company.name, gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           puts UserAndCompanyAndGakutika.all.count
@@ -233,7 +241,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             FactoryBot.create(:company)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -256,7 +264,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             FactoryBot.create(:company)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -279,7 +287,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             FactoryBot.create(:company)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -288,6 +296,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         let!(:user_and_company) do
           UserAndCompany.create(user_id: user.id, company_id: company.id)
         end
+
         it 'status bad request を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {company_name: " ", gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)
@@ -304,7 +313,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
             FactoryBot.create(:company)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -313,6 +322,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutikas", type: :request do
         let!(:user_and_company) do
           UserAndCompany.create(user_id: user.id, company_id: company.id)
         end
+
         it 'status bad request を返す' do
           post api_user_and_company_and_gakutikas_path, params: {user_and_company_and_gakutika: {gakutika_title: gakutika.title }}, headers: { "Authorization" => "JWT " + token }
           expect(response).to have_http_status(:bad_request)

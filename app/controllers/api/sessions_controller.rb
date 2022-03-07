@@ -5,7 +5,7 @@ class Api::SessionsController < ApplicationController
     def create
         user = User.find_by(email: session_params[:email])
         if user&.authenticate(session_params[:password])
-            exp = Time.now.to_i + 4 * 60
+            exp = Time.now.to_i + (4 * 60)
             token = TokenProvider.call(user_id: user.id, exp: exp)
             puts "メアドとパスワードは合っている"
             render json: { access: token }, status: :ok
