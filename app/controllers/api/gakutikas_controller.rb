@@ -30,7 +30,7 @@ class Api::GakutikasController < ApplicationController
     end
 
     def show
-        puts @gakutika
+        
         render json: @gakutika, serializer: GakutikaSerializer, include: [:questions, user_and_companies: [:company, user_and_company_and_gakutikas: [:gakutika, :questions] ]], show_gakutika_detail_flag: true, user_id: signin_user(request.headers).id, gakutika_id: @gakutika.id, status: :ok
     end
 
@@ -65,8 +65,8 @@ class Api::GakutikasController < ApplicationController
         end
         def gakutika_params_for_save
             gakutika_params_for_save = gakutika_params.to_h
-            gakutika_params_for_save[:start_month] = gakutika_params[:start_month] + "-1" unless gakutika_params[:start_month].nil?
-            gakutika_params_for_save[:end_month] = gakutika_params[:end_month] + "-1" unless gakutika_params[:end_month].nil?
+            gakutika_params_for_save[:start_month] = first_day_of_month(gakutika_params[:start_month]) unless gakutika_params[:start_month].nil?
+            gakutika_params_for_save[:end_month] = first_day_of_month(gakutika_params[:end_month]) unless gakutika_params[:end_month].nil?
             gakutika_params_for_save[:tough_rank] = signin_user(request.headers).gakutikas.count + 1 if gakutika_params_for_save[:tough_rank] == "0" and @gakutika.nil? # update ではない時
             
             return gakutika_params_for_save
@@ -90,5 +90,9 @@ class Api::GakutikasController < ApplicationController
                 render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request if gakutika.nil?
                 gakutika.update(tough_rank: gakutika_cnt+id.to_i)
             end
+        end
+
+        def first_day_of_month(month_string) 
+            month_string + "-1"
         end
 end
