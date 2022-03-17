@@ -54,10 +54,6 @@ class Api::GakutikasController < ApplicationController
         render status: :no_content
     end
 
-    def search
-        @gakutika_titles = Gakutika.where('title like ?', "%#{params[:title]}%").where(user_id: signin_user(request.headers).id).pluck(:title)
-        render json: { gakutika_titles: @gakutika_titles }, status: :ok
-    end
     
     private
         def tough_rank_update_params
@@ -80,10 +76,12 @@ class Api::GakutikasController < ApplicationController
             # @gakutika = signin_user(request.headers).gakutikas.eager_loading
             
             @gakutika = signin_user(request.headers).gakutikas.eager_loading.find_by(id: params[:id])
+            puts "what"
             # @gakutika = signin_user(request.headers).gakutikas.find_by(id: params[:id])
             render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request if @gakutika.nil?
         end
         def is_gakutikas_of_signin_user
+            puts "wwhat"
             gakutika_cnt = signin_user(request.headers).gakutikas.count
             tough_rank_update_params.each do |id, new_tough_rank| 
                 gakutika = Gakutika.find_by(id: id)
