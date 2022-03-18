@@ -7,7 +7,7 @@ RSpec.describe "SigninUser", type: :controller do
             FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60
+            exp = Time.now.to_i + (4 * 60)
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
 

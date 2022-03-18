@@ -6,9 +6,10 @@ RSpec.describe "UserAuthenticator", type: :model do
             FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60
+            exp = Time.now.to_i + (4 * 60)
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
+
         context "TokenProviderで生成したtokenがヘッダーに含まれている場合" do
             it "userモデルを返して，かつtokenを生成するときに指定したユーザidを持つユーザを返す" do
                 request_headers = { "Authorization" => "JWT " + token }

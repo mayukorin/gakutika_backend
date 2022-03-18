@@ -68,7 +68,7 @@ RSpec.describe User, type: :model do
 
     context "emailが256文字以上の場合" do
         it "無効" do
-            long_email = "a" * 255 + "@example.com"
+            long_email = ("a" * 255) + "@example.com"
             user = User.new(name: "abcabc", email: long_email, password: "password" )
             expect(user).not_to be_valid
             expect(user.errors.full_messages).to match(["メールアドレスは255文字以内で入力してください"])

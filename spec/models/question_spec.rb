@@ -11,11 +11,13 @@ RSpec.describe Question, type: :model do
     let!(:company) do
       FactoryBot.create(:company)
     end
+
     it "有効" do
       question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", day: Date.new(2017,10,7))
       expect(question).to be_valid
     end
   end
+
   context "質問内容がnilの場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -26,12 +28,14 @@ RSpec.describe Question, type: :model do
     let!(:company) do
       FactoryBot.create(:company)
     end
+
     it "無効" do
       question = Question.new(query: nil, answer: "bbbbbbbbbbbbbb", day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["質問内容を入力してください"])
     end
   end
+
   context "質問内容が空白の場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -42,12 +46,14 @@ RSpec.describe Question, type: :model do
     let!(:company) do
       FactoryBot.create(:company)
     end
+
     it "無効" do
       question = Question.new(query: " ", answer: "bbbbbbbbbbbbbb", day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["質問内容を入力してください"])
     end
   end
+
   context "質問内容がない場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -58,12 +64,14 @@ RSpec.describe Question, type: :model do
     let!(:company) do
       FactoryBot.create(:company)
     end
+
     it "無効" do
       question = Question.new(answer: "bbbbbbbbbbbbbb", day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["質問内容を入力してください"])
     end
   end
+
   context "解答がnilの場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -74,12 +82,14 @@ RSpec.describe Question, type: :model do
     let!(:company) do
       FactoryBot.create(:company)
     end
+
     it "無効" do
       question = Question.new(query: "aaaaaa", answer: nil, day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["解答を入力してください"])
     end
   end
+
   context "解答が空白の場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -90,12 +100,14 @@ RSpec.describe Question, type: :model do
     let!(:company) do
       FactoryBot.create(:company)
     end
+
     it "無効" do
       question = Question.new(query: "aaaaaa", answer: " ", day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["解答を入力してください"])
     end
   end
+
   context "解答がない場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -106,13 +118,15 @@ RSpec.describe Question, type: :model do
     let!(:company) do
       FactoryBot.create(:company)
     end
+
     it "無効" do
       question = Question.new(query: "aaaaaa", day: Date.new(2017,10,7))
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["解答を入力してください"])
     end
   end
-  '''
+
+  '
   context "company_id がnilの場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -177,7 +191,7 @@ RSpec.describe Question, type: :model do
       expect(question.errors.full_messages).to match(["企業を入力してください"])
     end
   end
-  '''
+  '
   context "day が nil の場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -188,12 +202,14 @@ RSpec.describe Question, type: :model do
     let!(:company) do
       FactoryBot.create(:company)
     end
+
     it "無効" do
       question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", day: nil)
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["日付けを入力してください"])
     end
   end
+
   context "day が 空白 の場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -204,12 +220,14 @@ RSpec.describe Question, type: :model do
     let!(:company) do
       FactoryBot.create(:company)
     end
+
     it "無効" do
       question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb", day: " ")
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["日付けを入力してください"])
     end
   end
+
   context "day が ない 場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -220,13 +238,15 @@ RSpec.describe Question, type: :model do
     let!(:company) do
       FactoryBot.create(:company)
     end
+
     it "無効" do
       question = Question.new(query: "aaaaaa", answer: "bbbbbbbbbbbbbb")
       expect(question).not_to be_valid
       expect(question.errors.full_messages).to match(["日付けを入力してください"])
     end
   end
-  '''
+
+  '
   context "gakutika_id が nil の場合" do
     let!(:user) do
       FactoryBot.create(:user)
@@ -291,5 +311,5 @@ RSpec.describe Question, type: :model do
       expect(question.errors.full_messages).to match(["学チカを入力してください"])
     end
   end
-  '''
+  '
 end

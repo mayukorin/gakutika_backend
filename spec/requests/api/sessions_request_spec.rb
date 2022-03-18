@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Api::Sessions", type: :request do
 
-    around(:each) do |example| 
+    around do |example| 
       show_detailed_exceptions = Rails.application.env_config['action_dispatch.show_detailed_exceptions']
       show_exceptions          = Rails.application.env_config['action_dispatch.show_exceptions']
 
@@ -15,6 +15,7 @@ RSpec.describe "Api::Sessions", type: :request do
       Rails.application.env_config['action_dispatch.show_exceptions']          = show_exceptions
 
     end
+
     describe "Session" do
 
         describe "#create" do
@@ -24,6 +25,7 @@ RSpec.describe "Api::Sessions", type: :request do
             let!(:user) do
               FactoryBot.create(:user)
             end
+
             it 'status ok を返す' do
               post api_signin_path, params: { session: { email: "abcdef@example.com", password: "password" } }
               expect(response).to have_http_status(:ok)
@@ -34,6 +36,7 @@ RSpec.describe "Api::Sessions", type: :request do
             let!(:user) do
               FactoryBot.create(:user)
             end
+
             it 'status unauthorized と「メールアドレスかパスワードが間違っています」メッセージを返す' do
               post api_signin_path, params: { session: { email: "abcde@example.com", password: "password" } }
               expect(response).to have_http_status(:unauthorized)
@@ -46,6 +49,7 @@ RSpec.describe "Api::Sessions", type: :request do
             let!(:user) do
               FactoryBot.create(:user)
             end
+
             it 'status unauthorized と「メールアドレスかパスワードが間違っています」メッセージを返す' do
               post api_signin_path, params: { session: { email: "abcdef@example.com", password: "passwor" } }
               expect(response).to have_http_status(:unauthorized)
@@ -61,9 +65,10 @@ RSpec.describe "Api::Sessions", type: :request do
             FactoryBot.create(:user)
           end
           let!(:token) do
-            exp = Time.now.to_i + 4 * 60
+            exp = Time.now.to_i + (4 * 60)
             TokenProvider.new.call(user_id: user.id, exp: exp)
           end
+
           context "TokenProviderで生成したtokenがヘッダーに含まれている場合" do
             it "status ok と user を返す" do
               get api_me_path, headers: { "Authorization" => "JWT " + token }
@@ -74,7 +79,7 @@ RSpec.describe "Api::Sessions", type: :request do
           end
     
           context "TokenProviderで生成したtokenと異なるものがヘッダーに含まれている場合" do
-            it "status unauthorized  と 「ログインをやり直してください」メッセージ を返す" do
+            it "status unauthorized と 「ログインをやり直してください」メッセージ を返す" do
               get api_me_path, headers: { "Authorization" => "JWT " + token + "aa"}
               expect(response).to have_http_status(:unauthorized)
               expected_response = { 'message' => ['ログインをやり直してください'] }
@@ -83,7 +88,7 @@ RSpec.describe "Api::Sessions", type: :request do
           end
     
           context "tokenがヘッダーに含まれていない場合" do
-            it "status unauthorized  と 「ログインをやり直してください」メッセージ を返す" do
+            it "status unauthorized と 「ログインをやり直してください」メッセージ を返す" do
               get api_me_path
               expect(response).to have_http_status(:unauthorized)
               expected_response = { 'message' => ['ログインをやり直してください'] }

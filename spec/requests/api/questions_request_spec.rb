@@ -8,7 +8,7 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:c) do
@@ -17,6 +17,7 @@ RSpec.describe "Api::Questions", type: :request do
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
+
         it 'status created と作成した質問を返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容", answer: "解答", company_name: "あいう", day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
           puts JSON.parse(response.body)
@@ -39,12 +40,13 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
+
         it 'status bad request と 企業名を入力してください メッセージを返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容", answer: "解答",  day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:bad_request)
@@ -60,13 +62,14 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
-        it 'status bad request と  企業名を入力してください メッセージを返す' do
+
+        it 'status bad request と 企業名を入力してください メッセージを返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容", answer: "解答",  company_name: " ", day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:bad_request)
           expected_response = { 'message' => ['企業名を入力してください'] }
@@ -81,12 +84,13 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
+
         it 'status bad request と 質問内容を入力してください メッセージを返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { answer: "解答", company_name: "あいう", day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:bad_request)
@@ -106,13 +110,14 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
-        it 'status bad request と  質問内容を入力してください メッセージを返す' do
+
+        it 'status bad request と 質問内容を入力してください メッセージを返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { query: " ", answer: "解答", company_name: "あいう", day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:bad_request)
           expected_response = { 'message' => ['質問内容を入力してください'] }
@@ -131,12 +136,13 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
+
         it 'status bad request と 解答を入力してください メッセージを返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容", company_name: "あいう", day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:bad_request)
@@ -156,12 +162,13 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
+
         it 'status bad request と 解答を入力してください メッセージを返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容", answer: " ", company_name: "あいう", day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:bad_request)
@@ -181,12 +188,13 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
+
         it 'status bad request と日付けを入力してください メッセージを返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容", answer: "解答", company_name: "あいう",gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:bad_request)
@@ -206,13 +214,14 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
-        it 'status bad request と  日付けを入力してください メッセージを返す' do
+
+        it 'status bad request と 日付けを入力してください メッセージを返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容", answer: "解答", company_name: "あいう", day: "", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:bad_request)
           expected_response = { 'message' => ['日付けを入力してください'] }
@@ -231,12 +240,13 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
+
         it 'status bad request と 学チカを入力してください メッセージを返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容", answer: "解答", company_name: "あいう", day: "2021-11-04" } }
           expect(response).to have_http_status(:bad_request)
@@ -256,13 +266,14 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
-        it 'status bad request と  学チカを入力してください メッセージを返す' do
+
+        it 'status bad request と 学チカを入力してください メッセージを返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容", answer: "解答", company_name: "あいう", day: "2021-11-04", gakutika_id: "" } }
           expect(response).to have_http_status(:bad_request)
           expected_response = { 'message' => ['該当する学チカが存在しません'] }
@@ -281,13 +292,14 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
             user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
         end
-        it 'status bad request と  学チカを入力してください メッセージを返す' do
+
+        it 'status bad request と 学チカを入力してください メッセージを返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容", answer: "解答", company_name: "あいう", day: "2021-11-04", gakutika_id: (gakutika.id+1).to_s } }
           expect(response).to have_http_status(:bad_request)
           expected_response = { 'message' => ['該当する学チカが存在しません'] }
@@ -309,7 +321,7 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -327,6 +339,7 @@ RSpec.describe "Api::Questions", type: :request do
         let!(:question) do
           Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
+
         it 'status accepted と更新した質問を返す' do
           patch api_question_path(question.id), headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容2", answer: "解答2", company_name: "あいう", day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:accepted)
@@ -346,7 +359,7 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -364,6 +377,7 @@ RSpec.describe "Api::Questions", type: :request do
         let!(:question) do
           Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
+
         it 'status accepted と更新した質問を返す' do
           # puts user_and_company_and_gakutika
           patch api_question_path(question.id), headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容2", answer: "解答2", company_name: "ういあ", day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
@@ -386,7 +400,7 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -404,6 +418,7 @@ RSpec.describe "Api::Questions", type: :request do
         let!(:question) do
           Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
+
         it 'status accepted と更新した質問を返す' do
           patch api_question_path(question.id), headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容2", answer: "解答2", company_name: "ういあ", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:accepted)
@@ -425,7 +440,7 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -443,6 +458,7 @@ RSpec.describe "Api::Questions", type: :request do
         let!(:question) do
           Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
+
         it 'status bad request と 日付けを入力してください メッセージを返す' do
           patch api_question_path(question.id), headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容2", answer: "解答2", company_name: "ういあ", day: " ", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:bad_request)
@@ -461,7 +477,7 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -479,6 +495,7 @@ RSpec.describe "Api::Questions", type: :request do
         let!(:question) do
           Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
+
         it 'status accepted と更新した質問を返す' do
           patch api_question_path(question.id), headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容2", answer: "解答2",  day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:accepted)
@@ -500,7 +517,7 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -518,6 +535,7 @@ RSpec.describe "Api::Questions", type: :request do
         let!(:question) do
           Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
+
         it 'status bad request と 企業名を入力してください メッセージを返す' do
           patch api_question_path(question.id), headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容2", answer: "解答2",  company_name: " ", day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:bad_request)
@@ -536,7 +554,7 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -555,6 +573,7 @@ RSpec.describe "Api::Questions", type: :request do
         let!(:question) do
           Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
+
         it "status bad request と該当する質問が存在しません メッセージを返す" do
           patch api_question_path(question.id+1), headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容2", answer: "解答2",  company_name: "abc", day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:bad_request)
@@ -568,12 +587,13 @@ RSpec.describe "Api::Questions", type: :request do
         end
 
       end
+
       context "answer が param に存在しない場合" do
         let!(:user) do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -591,6 +611,7 @@ RSpec.describe "Api::Questions", type: :request do
         let!(:question) do
           Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
+
         it 'status accepted と更新した質問を返す' do
           patch api_question_path(question.id), headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容2", company_name: "ういあ", day: "2021-11-04", gakutika_id: gakutika.id.to_s } }
           expect(response).to have_http_status(:accepted)
@@ -612,7 +633,7 @@ RSpec.describe "Api::Questions", type: :request do
           FactoryBot.create(:user)
         end
         let!(:token) do
-            exp = Time.now.to_i + 4 * 60 
+            exp = Time.now.to_i + (4 * 60) 
             TokenProvider.new.call(user_id: user.id, exp: exp)
         end
         let!(:gakutika) do
@@ -630,6 +651,7 @@ RSpec.describe "Api::Questions", type: :request do
         let!(:question) do
           Question.create(query: "質問内容", answer: "解答", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id, day: Date.new(2021, 11, 4))
         end
+
         it 'status accepted を返す' do
           patch api_question_path(question.id), headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容2", answer: "解答2",  company_name: "ういあ", day: "2021-11-04", gakutika_id: "" } }
           expect(response).to have_http_status(:accepted)

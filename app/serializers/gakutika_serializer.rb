@@ -22,7 +22,7 @@ class GakutikaSerializer < ActiveModel::Serializer
       @instance_options[:show_gakutika_detail_flag] == true
     end
 
-    '''
+    '
     def particular_user_and_company_and_gakutikas
       puts "trial"
       unless @instance_options[:user_id].nil?
@@ -35,7 +35,7 @@ class GakutikaSerializer < ActiveModel::Serializer
       end
       
     end
-    '''
+    '
 
     
 

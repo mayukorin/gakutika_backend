@@ -9,7 +9,7 @@ class Api::QuestionsController < ApplicationController
 
   def create
   
-    '''
+    '
     # @company = find_or_create_company(question_params[:company_name])
     @company = Company.find_or_create_by!(name: question_params[:company_name])
     @question = Question.new(question_params_for_save(@company.id, question_params[:gakutika_id]))
@@ -21,7 +21,7 @@ class Api::QuestionsController < ApplicationController
       @company.destroy 
       render json: { message: @question.errors.full_messages }, status: :bad_request
     end 
-    '''
+    '
     @question = Question.create!(question_params_for_save)
     @company = Company.find_or_create_by!(name: question_params[:company_name])
     @user_and_company = find_or_create_user_and_company(@company.id)
@@ -34,7 +34,7 @@ class Api::QuestionsController < ApplicationController
 
   def update
    
-    '''
+    '
     @question = find_question(params[:id])
     company_name = question_params[:company_name].to_s == '' ? @question&.company&.name : question_params[:company_name]
     # @company = find_or_create_company(company_name)
@@ -55,7 +55,7 @@ class Api::QuestionsController < ApplicationController
       end
       render json: { message: @question.errors.full_messages }, status: :bad_request
     end
-    '''
+    '
     @question = find_question(params[:id])
     gakutika_id = question_params[:gakutika_id].to_s == '' ? @question&.user_and_company_and_gakutika&.gakutika&.id : question_params[:gakutika_id]
     company_name = question_params[:company_name].to_s == '' ? @question&.user_and_company_and_gakutika&.user_and_company&.company&.name : question_params[:company_name]
@@ -75,7 +75,7 @@ class Api::QuestionsController < ApplicationController
   end
 
   private
-    '''
+    '
     def set_company
       
       company_name = question_params[:company_name].to_s == '' ? @question&.company&.name : question_params[:company_name]
@@ -96,7 +96,7 @@ class Api::QuestionsController < ApplicationController
         render json: { message: @user_and_company_and_gakutika.errors.full_messages }, status: :bad_request and return
       end
     end
-    '''
+    '
 
 
     def find_or_create_user_and_company(company_id)

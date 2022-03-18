@@ -5,6 +5,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "有効" do
       gakutika = user.gakutikas.build(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       expect(gakutika).to be_valid
@@ -15,6 +16,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(title: nil, content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       expect(gakutika).not_to be_valid
@@ -27,6 +29,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       expect(gakutika).not_to be_valid
@@ -38,6 +41,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(title: "", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       expect(gakutika).not_to be_valid
@@ -49,6 +53,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(title: "aaaaaa", content: nil, tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       expect(gakutika).not_to be_valid
@@ -60,6 +65,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(title: "aaaaaa", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       expect(gakutika).not_to be_valid
@@ -71,6 +77,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(title: "aaaaaa", content: "", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       expect(gakutika).not_to be_valid
@@ -82,6 +89,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: nil, end_month: Date.new(2017,10,7))
       expect(gakutika).not_to be_valid
@@ -93,6 +101,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, end_month: Date.new(2017,10,7))
       expect(gakutika).not_to be_valid
@@ -104,6 +113,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: nil)
       expect(gakutika).not_to be_valid
@@ -115,6 +125,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7))
       expect(gakutika).not_to be_valid
@@ -126,6 +137,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: nil, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       expect(gakutika).not_to be_valid
@@ -137,6 +149,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: "", start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       expect(gakutika).not_to be_valid
@@ -148,6 +161,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika = user.gakutikas.build(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 0, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       expect(gakutika).not_to be_valid
@@ -159,6 +173,7 @@ RSpec.describe Gakutika, type: :model do
     let!(:user) do
       FactoryBot.create(:user)
     end
+
     it "無効" do
       gakutika1 = user.gakutikas.create(title: "aaaaaa", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
       gakutika2 = user.gakutikas.build(title: "cccccc", content: "bbbbbbbbbbbbbb", tough_rank: 1, start_month: Date.new(2017,9,7), end_month: Date.new(2017,10,7))
