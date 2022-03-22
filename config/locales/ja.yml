@@ -50,6 +50,7 @@ ja:
             title:
               format: '%{message}'
               taken: 'この%{attribute}の学チカは既に存在します．違う%{attribute}を入力してください'
+              blank: '%{attribute}を入力してください'
 
         user_and_company_and_gakutika:
           attributes:
