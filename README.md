@@ -44,6 +44,12 @@ Ruby on Rails, Vue, heroku （デプロイ）
 https://github.com/mayukorin/gakutika_front
 
 にあります． 
+
+# その他
+
+STECH というコミュニティの LT 会でこのアプリについて離したときの資料です．
+https://drive.google.com/file/d/1-mYgBW4klgttnAC4ibtn0PDBF8EiVEyF/view?usp=sharing
+
 <!--
 # Requirement
  
