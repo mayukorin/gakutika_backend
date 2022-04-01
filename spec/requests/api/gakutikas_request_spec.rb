@@ -358,7 +358,6 @@ RSpec.describe "Api::Gakutikas", type: :request do
         end
     end
 
-
     describe "#destroy" do
         context "通常" do
             let!(:user) do

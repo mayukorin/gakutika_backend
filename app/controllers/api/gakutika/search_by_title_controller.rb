@@ -1,5 +1,4 @@
 class Api::Gakutika::SearchByTitleController < ApplicationController
-
     include Service
     include SigninUser
     include ExceptionHandler
