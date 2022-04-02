@@ -228,6 +228,7 @@ RSpec.describe "Api::Questions", type: :request do
           expect(JSON.parse(response.body)).to match(expected_response)
         end
       end
+    end
 
 
     describe "#update" do
@@ -427,6 +428,4 @@ RSpec.describe "Api::Questions", type: :request do
       end
     end 
   end
-
-
 end
