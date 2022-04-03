@@ -53,10 +53,10 @@ RSpec.describe "Api::Questions", type: :request do
         let!(:user_and_company_and_gakutika) do
           UserAndCompanyAndGakutika.create(gakutika_id: gakutika.id, user_and_company_id: user_and_company.id)
         end
-        it 'status bad request と 企業名を入力してください メッセージを返す' do
+        it 'status bad request と 該当する学チカが存在しません メッセージを返す' do
           post api_questions_path, headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容", answer: "解答",  user_and_company_and_gakutika_id: (user_and_company_and_gakutika.id+1).to_s, day: "2021-11-04" } }
           expect(response).to have_http_status(:bad_request)
-          expected_response = { 'message' => ['企業名を入力してください'] }
+          expected_response = { 'message' => ['該当する学チカが存在しません'] }
           expect(JSON.parse(response.body)).to match(expected_response)
         end
       end
@@ -299,7 +299,7 @@ RSpec.describe "Api::Questions", type: :request do
         it 'status accepted と更新した質問を返す' do
           patch api_question_path(question.id), headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容2", answer: "解答2", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id.to_s } }
           expect(response).to have_http_status(:accepted)
-          expected_response = { 'id' => question.id, 'query' => '質問内容2', 'answer' => '解答2', 'companyName' => 'ういあ', 'day' => '2021-11-04' }
+          expected_response = { 'id' => question.id, 'query' => '質問内容2', 'answer' => '解答2', 'companyName' => 'あいう', 'day' => '2021-11-04' }
           expect(JSON.parse(response.body)).to match(expected_response)
           new_question = Question.find_by(query: '質問内容2')
           user_and_company_cnt = UserAndCompany.where(user_id: user.id).count
@@ -414,7 +414,7 @@ RSpec.describe "Api::Questions", type: :request do
         it 'status accepted と更新した質問を返す' do
           patch api_question_path(question.id), headers: { "Authorization" => "JWT " + token }, params: { question: { query: "質問内容2", day: "2021-11-04", user_and_company_and_gakutika_id: user_and_company_and_gakutika.id.to_s } }
           expect(response).to have_http_status(:accepted)
-          expected_response = { 'id' => question.id, 'query' => '質問内容2', 'answer' => '解答', 'companyName' => 'ういあ', 'day' => '2021-11-04' }
+          expected_response = { 'id' => question.id, 'query' => '質問内容2', 'answer' => '解答', 'companyName' => 'あいう', 'day' => '2021-11-04' }
           expect(JSON.parse(response.body)).to match(expected_response)
           new_question = Question.find_by(query: '質問内容2')
           user_and_company_cnt = UserAndCompany.where(user_id: user.id).count
