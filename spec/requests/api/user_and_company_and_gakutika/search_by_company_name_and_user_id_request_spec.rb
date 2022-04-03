@@ -25,7 +25,7 @@ RSpec.describe "Api::UserAndCompanyAndGakutika::SearchByCompanyNameAndUserId", t
                 end
 
                 it 'status okを返す' do
-                    get api_user_and_company_and_gakutika_search_by_company_name_and_user_id_index_path(name: "あい"), headers: { "Authorization" => "JWT " + token }
+                    get api_user_and_company_and_gakutika_search_by_company_name_and_user_id_index_path(company_name: "あい", gakutika_id: gakutika.id), headers: { "Authorization" => "JWT " + token }
                     puts JSON.parse(response.body)
                     expect(response).to have_http_status(:ok)
                 end
