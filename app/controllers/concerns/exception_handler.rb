@@ -21,10 +21,12 @@ def not_authenticated(e)
     render json: { message: [ 'ログインをやり直してください'] }, status: :unauthorized 
 end
 
+
 def invalid_input(e)
     puts e
-    render json: { message: ['不正な入力です']}, status: :bad_request
+    render json: { message: ["不正な入力です"]}, status: :bad_request
 end
+
 
 def object_not_found(e)
     puts e

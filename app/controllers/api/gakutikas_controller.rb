@@ -8,6 +8,7 @@ class Api::GakutikasController < ApplicationController
 
     def index
         @gakutikas = Gakutika.eager_loading.where(user_id: signin_user(request.headers).id)
+        puts "render前"
         render json: @gakutikas, each_serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :ok
     end
     def update_tough_rank
@@ -21,10 +22,13 @@ class Api::GakutikasController < ApplicationController
     end
     def create
         @gakutika = signin_user(request.headers).gakutikas.build(gakutika_params_for_save)
-        
+        puts @gakutika
+        puts "#############"
         if @gakutika.save 
             render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :created
         else
+            puts @gakutika.errors.full_messages
+            puts "$$$$$$$"
             render json: { message: @gakutika.errors.full_messages }, status: :bad_request
         end
     end
