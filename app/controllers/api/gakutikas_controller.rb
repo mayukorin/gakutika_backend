@@ -22,13 +22,9 @@ class Api::GakutikasController < ApplicationController
     end
     def create
         @gakutika = signin_user(request.headers).gakutikas.build(gakutika_params_for_save)
-        puts @gakutika
-        puts "#############"
         if @gakutika.save 
             render json: @gakutika, serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :created
         else
-            puts @gakutika.errors.full_messages
-            puts "$$$$$$$"
             render json: { message: @gakutika.errors.full_messages }, status: :bad_request
         end
     end
