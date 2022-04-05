@@ -303,7 +303,7 @@ RSpec.describe "Api::Questions", type: :request do
           expect(JSON.parse(response.body)).to match(expected_response)
           new_question = Question.find_by(query: '質問内容2')
           user_and_company_cnt = UserAndCompany.where(user_id: user.id).count
-          expect(user_and_company_cnt).to match(1)
+          expect(user_and_company_cnt).to match(2)
           new_user_and_company = UserAndCompany.find_by(user_id: user.id, company_id: new_question.user_and_company_and_gakutika.user_and_company.company.id)
           new_user_and_company_and_gakutika_cnt = UserAndCompanyAndGakutika.where(user_and_company: new_user_and_company.id, gakutika: new_question.user_and_company_and_gakutika.gakutika.id).count
           expect(new_user_and_company_and_gakutika_cnt).to match(1)
@@ -340,7 +340,7 @@ RSpec.describe "Api::Questions", type: :request do
           expected_response = { 'message' => ['日付けを入力してください'] }
           expect(JSON.parse(response.body)).to match(expected_response)
           user_and_company_cnt = UserAndCompany.where(user_id: user.id).count
-          expect(user_and_company_cnt).to match(1)
+          expect(user_and_company_cnt).to match(2)
           user_and_company = UserAndCompany.find_by(user_id: user.id, company_id: question.user_and_company_and_gakutika.user_and_company.company.id)
           user_and_company_and_gakutika_cnt = UserAndCompanyAndGakutika.where(gakutika: gakutika.id).count
           expect(user_and_company_and_gakutika_cnt).to match(1)
@@ -379,7 +379,7 @@ RSpec.describe "Api::Questions", type: :request do
           expected_response = { 'message' => ['該当する質問が存在しません'] }
           expect(JSON.parse(response.body)).to match(expected_response)
           user_and_company_cnt = UserAndCompany.where(user_id: user.id).count
-          expect(user_and_company_cnt).to match(1)
+          expect(user_and_company_cnt).to match(2)
           user_and_company = UserAndCompany.find_by(user_id: user.id, company_id: question.user_and_company_and_gakutika.user_and_company.company.id)
           user_and_company_and_gakutika_cnt = UserAndCompanyAndGakutika.where(gakutika: gakutika.id).count
           expect(user_and_company_and_gakutika_cnt).to match(1)
@@ -418,7 +418,7 @@ RSpec.describe "Api::Questions", type: :request do
           expect(JSON.parse(response.body)).to match(expected_response)
           new_question = Question.find_by(query: '質問内容2')
           user_and_company_cnt = UserAndCompany.where(user_id: user.id).count
-          expect(user_and_company_cnt).to match(1)
+          expect(user_and_company_cnt).to match(2)
           new_user_and_company = UserAndCompany.find_by(user_id: user.id, company_id: new_question.user_and_company_and_gakutika.user_and_company.company.id)
           new_user_and_company_and_gakutika_cnt = UserAndCompanyAndGakutika.where(user_and_company: new_user_and_company.id, gakutika: new_question.user_and_company_and_gakutika.gakutika.id).count
           expect(new_user_and_company_and_gakutika_cnt).to match(1)

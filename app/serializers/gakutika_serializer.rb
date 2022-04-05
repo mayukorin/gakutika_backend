@@ -5,6 +5,7 @@ class GakutikaSerializer < ActiveModel::Serializer
     attribute :endMonth
     # has_many :user_and_company_and_gakutikas, serializer: UserAndCompanyAndGakutikaSerializer, if: -> { show_gakutika_detail }
     has_many :user_and_companies, serializer: UserAndCompanySerializer, gakutika_id: :gakutika_id, if: :show_gakutika_detail
+    attribute :user_and_default_company_and_gakutika_id, if: :show_gakutika_detail
     # has_many :user_and_company_and_gakutikas, serializer: UserAndCompanyAndGakutikaSerializer
     # has_many :companies, serializer: CompanySerializer, if: -> { show_gakutika_detail }
     # attribute :particular_user_and_company_and_gakutikas
@@ -20,6 +21,13 @@ class GakutikaSerializer < ActiveModel::Serializer
 
     def show_gakutika_detail
       @instance_options[:show_gakutika_detail_flag] == true
+    end
+
+    def user_and_default_company_and_gakutika_id
+      @default_company = Company.find_by(name: "予想される質問")
+      @user_and_default_company = UserAndCompany.find_by(user_id: object.user.id, company_id: @default_company.id)
+      @user_and_default_company_and_gakutika = UserAndCompanyAndGakutika.find_by(gakutika_id: object.id, user_and_company_id: @user_and_default_company.id)
+      return @user_and_default_company_and_gakutika.id
     end
 
     '
