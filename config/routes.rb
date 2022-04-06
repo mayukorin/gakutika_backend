@@ -15,6 +15,9 @@ Rails.application.routes.draw do
     namespace :company do
       resources :search_by_name, only: [:index]
     end
+    namespace :user_and_company_and_gakutika do
+      resources :search_by_company_name_and_user_id, only: [:index]
+    end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
