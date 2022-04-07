@@ -116,6 +116,6 @@ class Api::QuestionsController < ApplicationController
     end
 
     def find_question(question_id)
-      question = Question.find_by!(question_id)
+      question = Question.find_by!(id: question_id)
     end
 end
