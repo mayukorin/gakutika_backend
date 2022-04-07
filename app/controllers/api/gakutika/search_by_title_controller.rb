@@ -4,7 +4,7 @@ class Api::Gakutika::SearchByTitleController < ApplicationController
     include ExceptionHandler
 
     def index
-        @gakutika_titles = Gakutika.where('title like ?', "%#{params[:title]}%").where(user_id: signin_user(request.headers).id).pluck(:title)
-        render json: { gakutika_titles: @gakutika_titles }, status: :ok
+        @gakutikas = Gakutika.where('title like ?', "%#{params[:title]}%").where(user_id: signin_user(request.headers).id)
+        render json: @gakutikas, each_serializer: GakutikaSerializer, show_gakutika_detail_flag: false, status: :ok
     end
 end
