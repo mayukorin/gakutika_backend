@@ -2,6 +2,7 @@ class QuestionSerializer < ActiveModel::Serializer
   attributes :id, :query, :answer
   attribute :day
   attribute :companyName
+  attribute :user_and_company_and_gakutika_id
 
   def day
     object.day.strftime("%Y-%m-%d")
