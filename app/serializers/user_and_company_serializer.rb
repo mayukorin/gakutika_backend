@@ -2,6 +2,7 @@ class UserAndCompanySerializer < ActiveModel::Serializer
     attributes :id
     attribute :latest_interview_day 
     belongs_to :company
+    attribute :company_name
     has_many :user_and_company_and_gakutikas, show_question_flag: false
     attribute :user_and_company_and_particular_gakutika
     '
@@ -25,5 +26,9 @@ class UserAndCompanySerializer < ActiveModel::Serializer
                 end
             end
         end
+    end
+
+    def company_name
+        object.company.name
     end
 end

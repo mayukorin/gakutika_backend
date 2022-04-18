@@ -25,8 +25,8 @@ class GakutikaSerializer < ActiveModel::Serializer
 
     def user_and_default_company_and_gakutika_id
       @default_company = Company.find_by(name: "予想される質問")
-      @user_and_default_company = UserAndCompany.find_by(user_id: object.user.id, company_id: @default_company.id)
-      @user_and_default_company_and_gakutika = UserAndCompanyAndGakutika.find_by(gakutika_id: object.id, user_and_company_id: @user_and_default_company.id)
+      @user_and_default_company = UserAndCompany.find_or_create_by(user_id: object.user.id, company_id: @default_company.id)
+      @user_and_default_company_and_gakutika = UserAndCompanyAndGakutika.find_or_create_by(gakutika_id: object.id, user_and_company_id: @user_and_default_company.id)
       return @user_and_default_company_and_gakutika.id
     end
 

@@ -46,7 +46,7 @@ class Api::UserAndCompanyAndGakutikasController < ApplicationController
     end
 
     def is_gakutika_of_signin_user
-      gakutika = Gakutika.find_by(title: user_and_company_and_gakutika_params[:gakutika_title])
+      gakutika = Gakutika.find_by(id: user_and_company_and_gakutika_params[:gakutika_id])
       render json: { message: ['該当する学チカが存在しません'] }, status: :bad_request unless gakutika&.user&.id == signin_user(request.headers).id
     end
 end
